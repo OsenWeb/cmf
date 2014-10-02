@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\Product:
     type: entity
-    table: products
+    table: shop_products
     id:
         id:
             type: integer
@@ -43,6 +43,15 @@ BW\ShopBundle\Entity\Product:
             type: datetime
         updated:
             type: datetime
+    oneToMany:
+        productImages:
+            targetEntity: BW\ShopBundle\Entity\ProductImage
+            mappedBy: product
+            cascade: [persist, remove]
+        productFields:
+            targetEntity: BW\ShopBundle\Entity\ProductField
+            mappedBy: product
+            cascade: [persist, remove]
     manyToOne:
         category:
             targetEntity: BW\ShopBundle\Entity\Category
@@ -50,9 +59,7 @@ BW\ShopBundle\Entity\Product:
         vendor:
             targetEntity: BW\ShopBundle\Entity\Vendor
             inversedBy: products
-    oneToMany:
-        productImages:
-            targetEntity: BW\ShopBundle\Entity\ProductImage
-            mappedBy: product
+        route:
+            targetEntity: BW\RouterBundle\Entity\Route
             cascade: [persist, remove]
     lifecycleCallbacks: {  }

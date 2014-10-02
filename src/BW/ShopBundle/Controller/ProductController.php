@@ -2,11 +2,15 @@
 
 namespace BW\ShopBundle\Controller;
 
+use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Utility\FormUtility;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use BW\ShopBundle\Entity\ProductField;
 use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Form\ProductType;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class ProductController
@@ -14,40 +18,154 @@ use BW\ShopBundle\Form\ProductType;
  */
 class ProductController extends Controller
 {
+    /**
+     * Handle the filter form
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function filterRedirectAction(Request $request)
+    {
+        $filter = $this->get('bw_shop.service.product_filter');
+        $form = $filter->createProductFilterForm();
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $redirectUrl = $filter->generateUrl();
+
+            return $this->redirect($redirectUrl);
+        } else {
+            die('Form invalid.');
+        }
+    }
+
+//    /**
+//     * Filter the product list
+//     *
+//     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+//     */
+//    public function filterAction(Request $request, $filterQuery)
+//    {
+//        $filter = $this->get('bw_shop.service.product_filter');
+//        $em = $this->getDoctrine()->getManager();
+//
+//        // Get array of property IDs from filter query string
+//        $filterQuery = preg_replace('@\-\*(\?.*)?$@', '', $filterQuery); // remove asterisk sign (-*) with query string at the end
+//        $ids = explode('-', $filterQuery);
+//
+//        // Get collection of entities from property IDs
+//        $collection = $em->getRepository('BWCustomBundle:Property')->findBy(array(
+//            'id' => $ids,
+//        ));
+//
+////        $fields = array();
+////        /** @var Property $entity */
+////        foreach($collection as $entity) {
+////            $fields[$entity->getField()->getId()][] = $entity->getId();
+////        }
+////        $content = '';
+////        var_dump($fields);
+////        foreach ($fields as $fieldId => $properties) {
+////            foreach ($properties as $propertyId) {
+////                $content .= "form[{$fieldId}][]={$propertyId}&";
+////            }
+////        }
+////        $content .= 'form[apply]=';
+//        /////////////////
+//
+//        $form = $filter->createProductFilterForm($collection);
+//        /** @var QueryBuilder $qb */
+//        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+//        $qb
+//            ->where($qb->expr()->eq('p.published', true))
+//            ->orderBy('p.created', 'ASC')
+//        ;
+//
+//        $entities = $qb->getQuery()->getResult();
+//
+//        return $this->render('BWShopBundle:Product:list.html.twig', array(
+//            'entities' => $entities,
+//            'form' => $form->createView(),
+//        ));
+//    }
 
     /**
      * Lists all Category entities.
      */
-    public function listAction()
+    public function listAction($filterQuery)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('BWShopBundle:Product')->findBy(array(
-            'published' => true,
-        ), array(
-//            'created' => 'ASC',
+        // Get array of property IDs from filter query string
+        $filterQuery = preg_replace('@\-\*(\?.*)?$@', '', $filterQuery); // remove asterisk sign (-*) with query string at the end
+        $ids = explode('-', $filterQuery);
+
+        /** @var array $collection Get collection of entities from property IDs */
+        $properties = $em->getRepository('BWCustomBundle:Property')->findBy(array(
+            'id' => $ids,
         ));
+
+        $filter = $this->get('bw_shop.service.product_filter');
+        $form = $filter->createProductFilterForm($properties);
+
+        /** @var QueryBuilder $qb */
+        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+        $qb
+            ->addSelect('r')
+            ->addSelect('v')
+            ->addSelect('c')
+            ->addSelect('cr')
+            ->leftJoin('p.route', 'r')
+            ->leftJoin('p.vendor', 'v')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('c.route', 'cr')
+            ->where('p.published = 1')
+            ->orderBy('p.created', 'ASC')
+        ;
+        if ($properties) {
+            $qb
+//                ->addSelect('pf')
+//                ->addSelect('pr')
+                ->leftJoin('p.productFields', 'pf')
+                ->innerJoin('pf.properties', 'pr')
+            ;
+
+            $fields = [];
+            /** @var Property $property */
+            foreach ($properties as $property) {
+                $propertyIds[] = $property->getId();
+                $groupPropertyIds[$property->getField()->getId()][] = $property->getId();
+            }
+
+            $qb
+                ->andWhere('pr.id IN (:properties)')
+                ->groupBy('p.id')
+                ->having('COUNT(p.id) = :count')
+                ->setParameter('properties', $propertyIds)
+                ->setParameter('count', count($groupPropertyIds)) // Count affected custom fields
+            ;
+        }
+        $entities = $qb->getQuery()->getResult(); // Collection of products
+//SELECT
+//	-- COUNT(sp.id),
+//	sp.heading,
+//	spcf.product_id, spcf.field_id,
+//	cf.name,
+//	cp.id, cp.name
+//FROM shop_products AS sp
+//LEFT JOIN shop_product_custom_fields AS spcf
+//	ON spcf.product_id = sp.id
+//LEFT JOIN custom_fields AS cf
+//	ON cf.id = spcf.field_id
+//LEFT JOIN product_field_property AS pfp
+//	ON pfp.product_field_id = spcf.id
+//LEFT JOIN custom_properties AS cp
+//	ON cp.id = pfp.property_id
+//WHERE cp.id IN (9,3,4)
+//	-- GROUP BY sp.id
 
         return $this->render('BWShopBundle:Product:list.html.twig', array(
             'entities' => $entities,
-        ));
-    }
-
-    /**
-     * Finds and displays a Product entity by slug.
-     */
-    public function showBySlugAction($slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('BWShopBundle:Product')->findOneBySlug($slug);
-
-        if ( ! $entity) {
-            throw $this->createNotFoundException('Unable to find Product entity.');
-        }
-
-        return $this->render('BWShopBundle:Product:show.html.twig', array(
-            'entity'      => $entity,
+            'form' => $form->createView(),
         ));
     }
 
@@ -76,6 +194,17 @@ class ProductController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if ($form->get('addField')->isClicked()) {
+                $field = $form->get('field')->getData();
+                if ($field) {
+                    $productField = new ProductField();
+                    $productField->setProduct($entity);
+                    $productField->setField($field);
+                    $em->persist($productField);
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -170,11 +299,11 @@ class ProductController extends Controller
     }
 
     /**
-    * Creates a form to edit a Product entity.
-    *
-    * @param Product $entity The entity
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to edit a Product entity.
+     *
+     * @param Product $entity The entity
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createEditForm(Product $entity)
     {
         $form = $this->createForm(new ProductType(), $entity, array(
@@ -197,7 +326,6 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('BWShopBundle:Product')->find($id);
-
         if ( ! $entity) {
             throw $this->createNotFoundException('Unable to find Product entity.');
         }
@@ -210,6 +338,14 @@ class ProductController extends Controller
             if ($editForm->get('delete')->isClicked()) {
                 $this->delete($id);
                 return $this->redirect($this->generateUrl('product'));
+            } elseif ($editForm->get('addField')->isClicked()) {
+                $field = $editForm->get('field')->getData();
+                if ($field) {
+                    $productField = new ProductField();
+                    $productField->setProduct($entity);
+                    $productField->setField($field);
+                    $em->persist($productField);
+                }
             }
 
             $em->flush();
@@ -269,6 +405,6 @@ class ProductController extends Controller
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
-        ;
+            ;
     }
 }

@@ -3,13 +3,16 @@
 namespace BW\ShopBundle\Entity;
 
 use BW\MainBundle\Service\SluggableInterface;
+use BW\RouterBundle\Entity\Route;
+use BW\RouterBundle\Entity\RouteInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class Product
  * @package BW\ShopBundle\Entity
  */
-class Product implements SluggableInterface
+class Product implements SluggableInterface, RouteInterface
 {
     /**
      * @var integer
@@ -106,11 +109,60 @@ class Product implements SluggableInterface
      */
     private $productImages;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $productFields;
+
 
     public function __construct()
     {
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
+        $this->productImages = new ArrayCollection();
+        $this->productFields = new ArrayCollection();
+    }
+
+
+    public function generatePath()
+    {
+        $slug = $this->getSlug();
+        $first = isset($slug[0]) ? $slug[0] : '';
+
+        if (0 !== strcmp('/', $first)) {
+            $segments = array();
+            $parent = $this->getCategory();
+
+            if ($parent) {
+                $segments[] = ''; // Add slash to the end of path
+            }
+
+            while ($parent) {
+                if ($parent->getSlug()) {
+                    $segments[] = $parent->getSlug();
+                }
+                $parent = $parent->getParent();
+            }
+
+            $slug = '/' . implode('/', array_reverse($segments)) . $this->getSlug();
+        }
+
+        return $slug;
+    }
+
+    public function getDefaults()
+    {
+        if ( ! $this->getId()) {
+            throw new \RuntimeException(''
+                . 'The entity ID not defined. '
+                . 'Maybe you forgot to execute "flush" method before handle the entity?'
+            );
+        }
+
+        return array(
+            '_controller' => 'BWShopBundle:Product:show',
+            'id' => $this->getId(),
+        );
     }
 
     public function getStringForSlug()
@@ -459,7 +511,7 @@ class Product implements SluggableInterface
      * @param \BW\ShopBundle\Entity\Category $category
      * @return Product
      */
-    public function setCategory(\BW\ShopBundle\Entity\Category $category = null)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
 
@@ -482,7 +534,7 @@ class Product implements SluggableInterface
      * @param \BW\RouterBundle\Entity\Route $route
      * @return Product
      */
-    public function setRoute(\BW\RouterBundle\Entity\Route $route = null)
+    public function setRoute(Route $route = null)
     {
         $this->route = $route;
 
@@ -578,5 +630,38 @@ class Product implements SluggableInterface
     public function getProductImages()
     {
         return $this->productImages;
+    }
+
+    /**
+     * Add productFields
+     *
+     * @param \BW\ShopBundle\Entity\ProductField $productFields
+     * @return Product
+     */
+    public function addProductField(ProductField $productFields)
+    {
+        $this->productFields[] = $productFields;
+
+        return $this;
+    }
+
+    /**
+     * Remove productFields
+     *
+     * @param \BW\ShopBundle\Entity\ProductField $productFields
+     */
+    public function removeProductField(ProductField $productFields)
+    {
+        $this->productFields->removeElement($productFields);
+    }
+
+    /**
+     * Get productFields
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductFields()
+    {
+        return $this->productFields;
     }
 }

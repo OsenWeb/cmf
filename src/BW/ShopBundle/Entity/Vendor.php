@@ -2,6 +2,7 @@
 
 namespace BW\ShopBundle\Entity;
 
+use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Service\SluggableInterface;
 use BW\UploadBundle\Entity\Image;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -58,6 +59,11 @@ class Vendor implements SluggableInterface
      */
     private $image;
 
+    /**
+     * @var \BW\CustomBundle\Entity\Property
+     */
+    private $property;
+
 
     /**
      * The constructor
@@ -67,10 +73,12 @@ class Vendor implements SluggableInterface
         $this->products = new ArrayCollection();
     }
 
+
     public function getStringForSlug()
     {
         return $this->getHeading();
     }
+
 
     /* SETTERS / GETTERS */
 
@@ -277,5 +285,28 @@ class Vendor implements SluggableInterface
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Set property
+     *
+     * @param \BW\CustomBundle\Entity\Property $property
+     * @return Vendor
+     */
+    public function setProperty(Property $property = null)
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * Get property
+     *
+     * @return \BW\CustomBundle\Entity\Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 }

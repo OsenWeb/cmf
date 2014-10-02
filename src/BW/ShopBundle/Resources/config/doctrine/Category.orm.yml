@@ -38,6 +38,12 @@ BW\ShopBundle\Entity\Category:
         right:
             column: rgt
             type: integer
+    oneToOne:
+        property:
+            targetEntity: BW\CustomBundle\Entity\Property
+            cascade: [persist, remove]
+            joinColumn:
+                nullable: false
     oneToMany:
         children:
             targetEntity: BW\ShopBundle\Entity\Category
@@ -51,7 +57,7 @@ BW\ShopBundle\Entity\Category:
             inversedBy: children
         route:
             targetEntity: BW\RouterBundle\Entity\Route
-            cascade: [remove]
+            cascade: [persist, remove]
     lifecycleCallbacks:
         prePersist: [generateLevel]
         preUpdate: [generateLevel]

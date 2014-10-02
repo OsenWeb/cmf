@@ -16,6 +16,7 @@
         <div class="row">
             <div class="col-lg-3">
                 {{ service('bw_blog.widget').lastPosts()|raw }}
+                {{ form(form) }}
             </div>
             <div class="col-lg-9">
                 <div class="category">
@@ -25,7 +26,7 @@
                     {% if entity.parent %}
                         <div class="category">
                             Родительская категория:
-                            <a href="{{ path('category_show_by_slug', {'slug': entity.parent.slug}) }}">
+                            <a href="{{ app.request.uriForPath(entity.parent.route.path) }}">
                                 {{ entity.parent.heading }}
                             </a>
                         </div>

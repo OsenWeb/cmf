@@ -2,15 +2,17 @@
 
 namespace BW\ShopBundle\Entity;
 
+use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Service\SluggableInterface;
 use BW\RouterBundle\Entity\Route;
+use BW\RouterBundle\Entity\RouteInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Category
  * @package BW\ShopBundle\Entity
  */
-class Category implements SluggableInterface
+class Category implements SluggableInterface, RouteInterface
 {
     /**
      * @var integer $id
@@ -92,6 +94,11 @@ class Category implements SluggableInterface
      */
     private $products;
 
+    /**
+     * @var \BW\CustomBundle\Entity\Property
+     */
+    private $property;
+
 
     public function __construct()
     {
@@ -99,11 +106,11 @@ class Category implements SluggableInterface
         $this->products = new ArrayCollection();
     }
 
-
     public function __toString()
     {
         return str_repeat('- ', $this->level) . $this->heading;
     }
+
 
     /**
      * Generate current nested level
@@ -123,6 +130,46 @@ class Category implements SluggableInterface
         }
 
         return $this;
+    }
+
+    public function generatePath()
+    {
+        $slug = $this->getSlug();
+
+        if (0 !== strcmp('/', $slug[0])) {
+            $segments = array();
+            $parent = $this->getParent();
+
+            if ($parent) {
+                $segments[] = ''; // Add slash to the end of path
+            }
+
+            while ($parent) {
+                if ($parent->getSlug()) {
+                    $segments[] = $parent->getSlug();
+                }
+                $parent = $parent->getParent();
+            }
+
+            $slug = '/' . implode('/', array_reverse($segments)) . $this->getSlug();
+        }
+
+        return $slug;
+    }
+
+    public function getDefaults()
+    {
+        if ( ! $this->getId()) {
+            throw new \RuntimeException(''
+                . 'The entity ID not defined. '
+                . 'Maybe you forgot to execute "flush" method before handle the entity?'
+            );
+        }
+
+        return array(
+            '_controller' => 'BWShopBundle:Category:show',
+            'id' => $this->getId(),
+        );
     }
 
     public function getStringForSlug()
@@ -497,7 +544,7 @@ class Category implements SluggableInterface
      * @param \BW\ShopBundle\Entity\Product $products
      * @return Category
      */
-    public function addProduct(\BW\ShopBundle\Entity\Product $products)
+    public function addProduct(Product $products)
     {
         $this->products[] = $products;
 
@@ -509,7 +556,7 @@ class Category implements SluggableInterface
      *
      * @param \BW\ShopBundle\Entity\Product $products
      */
-    public function removeProduct(\BW\ShopBundle\Entity\Product $products)
+    public function removeProduct(Product $products)
     {
         $this->products->removeElement($products);
     }
@@ -522,5 +569,28 @@ class Category implements SluggableInterface
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * Set property
+     *
+     * @param \BW\CustomBundle\Entity\Property $property
+     * @return Category
+     */
+    public function setProperty(Property $property = null)
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * Get property
+     *
+     * @return \BW\CustomBundle\Entity\Property 
+     */
+    public function getProperty()
+    {
+        return $this->property;
     }
 }

@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\Vendor:
     type: entity
-    table: vendors
+    table: shop_vendors
     id:
         id:
             type: integer
@@ -23,6 +23,11 @@ BW\ShopBundle\Entity\Vendor:
             type: string
             length: 255
     oneToOne:
+        property:
+            targetEntity: BW\CustomBundle\Entity\Property
+            cascade: [persist, remove]
+            joinColumn:
+                nullable: false
         image:
             targetEntity: BW\UploadBundle\Entity\Image
             cascade: [persist, remove]

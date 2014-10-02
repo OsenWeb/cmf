@@ -2,12 +2,13 @@
 
 namespace BW\ShopBundle\Controller;
 
+use BW\CustomBundle\Entity\Property;
+use BW\ShopBundle\Entity\Vendor;
+use BW\ShopBundle\Form\VendorType;
 use BW\MainBundle\Utility\FormUtility;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use BW\ShopBundle\Entity\Vendor;
-use BW\ShopBundle\Form\VendorType;
 
 /**
  * Class VendorController
@@ -15,7 +16,6 @@ use BW\ShopBundle\Form\VendorType;
  */
 class VendorController extends Controller
 {
-
     /**
      * Lists all Vendor entities in frontend.
      */
@@ -25,8 +25,12 @@ class VendorController extends Controller
 
         $entities = $em->getRepository('BWShopBundle:Vendor')->findBy(array());
 
+        $filter = $this->get('bw_shop.service.product_filter');
+        $form = $filter->createProductFilterForm();
+
         return $this->render('BWShopBundle:Vendor:list.html.twig', array(
             'entities' => $entities,
+            'form' => $form->createView(),
         ));
     }
 
@@ -49,12 +53,20 @@ class VendorController extends Controller
      */
     public function createAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new Vendor();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            // create custom property and relate with vendor
+            $field = $em->getRepository('BWCustomBundle:Field')->find(4); // get vendor custom field entity
+            $property = new Property();
+            $property->setField($field);
+            $property->setName($entity->getHeading());
+            $entity->setProperty($property);
+
             $em->persist($entity);
             $em->flush();
 
@@ -186,11 +198,15 @@ class VendorController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
             if ($editForm->get('delete')->isClicked()) {
                 $this->delete($id);
                 return $this->redirect($this->generateUrl('vendor'));
             }
+
+            // update related custom property
+            $entity->getProperty()->setName(
+                $entity->getHeading()
+            );
 
             $em->flush();
 
@@ -264,14 +280,20 @@ class VendorController extends Controller
         $qb = $em->getRepository('BWShopBundle:Vendor')->createQueryBuilder('v');
         $qb
             ->addSelect('i')
-            ->innerJoin('v.image', 'i')
+            ->leftJoin('v.image', 'i')
             ->where($qb->expr()->eq('v.slug', ':slug'))
             ->setParameter('slug', $slug)
         ;
+        /** @var Vendor $entity */
         $entity = $qb->getQuery()->getOneOrNullResult();
         if ( ! $entity) {
             throw $this->createNotFoundException('Unable to find Vendor entity.');
         }
+
+        $filter = $this->get('bw_shop.service.product_filter');
+        $form = $filter->createProductFilterForm(array(
+            $entity->getProperty(),
+        ));
 
         $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
         $qb
@@ -295,6 +317,7 @@ class VendorController extends Controller
         return $this->render('BWShopBundle:Vendor:show.html.twig', array(
             'entity' => $entity,
             'pagination' => $pagination,
+            'form' => $form->createView(),
         ));
     }
 }

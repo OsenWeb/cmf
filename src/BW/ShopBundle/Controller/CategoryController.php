@@ -2,7 +2,9 @@
 
 namespace BW\ShopBundle\Controller;
 
+use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Utility\FormUtility;
+use BW\RouterBundle\Entity\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -37,12 +39,20 @@ class CategoryController extends Controller
      */
     public function createAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new Category();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            // create custom property and relate with category
+            $field = $em->getRepository('BWCustomBundle:Field')->find(3); // get vendor custom field entity
+            $property = new Property();
+            $property->setField($field);
+            $property->setName($entity->getHeading());
+            $entity->setProperty($property);
+
             $em->persist($entity);
             $em->flush();
 
@@ -100,21 +110,56 @@ class CategoryController extends Controller
     /**
      * Finds and displays a Category entity.
      */
-    public function showAction($id)
+    public function showAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BWShopBundle:Category')->find($id);
-
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $em->getRepository('BWShopBundle:Category')->createQueryBuilder('c');
+        $qb
+            ->addSelect('p')
+            ->leftJoin('c.parent', 'p')
+            ->where($qb->expr()->eq('c.published', true))
+            ->andWhere($qb->expr()->eq('c.id', ':id'))
+            ->setParameter('id', $id)
+        ;
+        /** @var Category $entity */
+        $entity = $qb->getQuery()->getOneOrNullResult();
         if ( ! $entity) {
             throw $this->createNotFoundException('Unable to find Category entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $filter = $this->get('bw_shop.service.product_filter');
+        $form = $filter->createProductFilterForm(array(
+            $entity->getProperty(),
+        ));
+
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+        $qb
+            ->addSelect('v')
+            ->addSelect('c')
+            ->addSelect('pi')
+            ->addSelect('i')
+            ->innerJoin('p.vendor', 'v')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('pi.image', 'i')
+            ->where($qb->expr()->eq('p.published', true))
+            ->andWhere('c.left >= :left AND c.left < :right')
+            ->setParameter('left', $entity->getLeft())
+            ->setParameter('right', $entity->getRight())
+        ;
+        $pagination = $this->get('knp_paginator')->paginate(
+            $qb,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('count', 10)
+        );
 
         return $this->render('BWShopBundle:Category:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'pagination' => $pagination,
+            'form' => $form->createView(),
         ));
     }
 
@@ -183,6 +228,11 @@ class CategoryController extends Controller
                 $this->delete($id);
                 return $this->redirect($this->generateUrl('category'));
             }
+
+            // update related custom property
+            $entity->getProperty()->setName(
+                $entity->getHeading()
+            );
 
             $em->flush();
 
@@ -254,52 +304,52 @@ class CategoryController extends Controller
         ;
     }
 
-    /**
-     * Finds and displays a Category entity.
-     */
-    public function showBySlugAction(Request $request, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->getRepository('BWShopBundle:Category')->createQueryBuilder('c');
-        $qb
-            ->addSelect('p')
-            ->leftJoin('c.parent', 'p')
-            ->where($qb->expr()->eq('c.published', true))
-            ->andWhere($qb->expr()->eq('c.slug', ':slug'))
-            ->setParameter('slug', $slug)
-        ;
-        $entity = $qb->getQuery()->getOneOrNullResult();
-        if ( ! $entity) {
-            throw $this->createNotFoundException('Unable to find Category entity.');
-        }
-
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
-        $qb
-            ->addSelect('v')
-            ->addSelect('c')
-            ->addSelect('pi')
-            ->addSelect('i')
-            ->innerJoin('p.vendor', 'v')
-            ->leftJoin('p.category', 'c')
-            ->leftJoin('p.productImages', 'pi')
-            ->leftJoin('pi.image', 'i')
-            ->where($qb->expr()->eq('p.published', true))
-            ->andWhere('c.left >= :left AND c.left < :right')
-            ->setParameter('left', $entity->getLeft())
-            ->setParameter('right', $entity->getRight())
-        ;
-        $pagination = $this->get('knp_paginator')->paginate(
-            $qb,
-            $request->query->getInt('page', 1),
-            $request->query->getInt('count', 10)
-        );
-
-        return $this->render('BWShopBundle:Category:show.html.twig', array(
-            'entity' => $entity,
-            'pagination' => $pagination,
-        ));
-    }
+//    /**
+//     * Finds and displays a Category entity.
+//     */
+//    public function showBySlugAction(Request $request, $slug)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        /** @var \Doctrine\ORM\QueryBuilder $qb */
+//        $qb = $em->getRepository('BWShopBundle:Category')->createQueryBuilder('c');
+//        $qb
+//            ->addSelect('p')
+//            ->leftJoin('c.parent', 'p')
+//            ->where($qb->expr()->eq('c.published', true))
+//            ->andWhere($qb->expr()->eq('c.slug', ':slug'))
+//            ->setParameter('slug', $slug)
+//        ;
+//        $entity = $qb->getQuery()->getOneOrNullResult();
+//        if ( ! $entity) {
+//            throw $this->createNotFoundException('Unable to find Category entity.');
+//        }
+//
+//        /** @var \Doctrine\ORM\QueryBuilder $qb */
+//        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+//        $qb
+//            ->addSelect('v')
+//            ->addSelect('c')
+//            ->addSelect('pi')
+//            ->addSelect('i')
+//            ->innerJoin('p.vendor', 'v')
+//            ->leftJoin('p.category', 'c')
+//            ->leftJoin('p.productImages', 'pi')
+//            ->leftJoin('pi.image', 'i')
+//            ->where($qb->expr()->eq('p.published', true))
+//            ->andWhere('c.left >= :left AND c.left < :right')
+//            ->setParameter('left', $entity->getLeft())
+//            ->setParameter('right', $entity->getRight())
+//        ;
+//        $pagination = $this->get('knp_paginator')->paginate(
+//            $qb,
+//            $request->query->getInt('page', 1),
+//            $request->query->getInt('count', 10)
+//        );
+//
+//        return $this->render('BWShopBundle:Category:show.html.twig', array(
+//            'entity' => $entity,
+//            'pagination' => $pagination,
+//        ));
+//    }
 }

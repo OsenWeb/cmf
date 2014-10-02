@@ -7,9 +7,14 @@
         <div class="row">
             <div class="col-lg-3">
                 {{ service('bw_blog.widget').lastPosts()|raw }}
+                {#{{ form(service('bw_shop.service.product_filter').getProductFilterForm.createView) }}#}
+                {{ form(form) }}
             </div>
             <div class="col-lg-9">
                 <h1><i class="icon-list"></i> Все товары</h1>
+                <div class="count">
+                    Всего найдено: <strong>{{ entities|length }}</strong> товаров.
+                </div>
                 <div class="products">
                     {% for entity in entities %}
                         {% include 'BWShopBundle:Product:row.html.twig' %}
