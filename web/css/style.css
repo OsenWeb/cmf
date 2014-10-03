@@ -857,32 +857,32 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     margin-top: 20px;
 }
 
-.filter-param {
+.filter-field {
     margin-bottom: 24px;
 }
 
-.param-name {
+.field-name {
     margin-bottom: 4px;
     text-transform: uppercase;
 }
 
-.param-options {
+.field-params {
     padding-right: 30px;
     max-height: 21.4em;
     overflow-y: auto;
 }
 
-.param-option {
+.field-param {
     margin-bottom: 4px;
 }
 
-.param-option label {
+.field-param label {
     display: block;
     padding-left: 1.6em;
     position: relative;
 }
 
-.param-option label:before {
+.field-param label:before {
     content: "";
     display: block;
     -webkit-box-sizing: border-box;
@@ -906,27 +906,27 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     background-image: url(../images/check.png);
 }
 
-.param-option input[type="checkbox"] {
+.field-param input[type="checkbox"] {
     display: none;
 }
 
-.param-option input[type="checkbox"]:checked + label:before {
+.field-param input[type="checkbox"]:checked + label:before {
     background-position: 50% 73%;
 }
 
-.param-option-value, .prod-count {
+.field-param-name, .prod-count {
     padding: 0;
 }
 
-.param-option-value {
+.field-param-name {
     color: #808080;
 }
 
-.param-option label:hover .param-option-value, .param-option input[type="checkbox"]:checked + label .param-option-value {
+.field-param label:hover .field-param-name, .field-param input[type="checkbox"]:checked + label .field-param-name {
     color: #262626;
 }
 
-.param-option label:hover:before, .param-option input[type="checkbox"]:checked + label:before {
+.field-param label:hover:before, .field-param input[type="checkbox"]:checked + label:before {
     border-color: #9D9D9D;
 }
 
