@@ -1,12 +1,49 @@
-BoW
-===
+The CMF Sandbox
+===============
 
-[![Build Status](https://travis-ci.org/bocharsky-bw/bow.svg?branch=master)](https://travis-ci.org/bocharsky-bw/bow)
+[![Build Status](https://travis-ci.org/osen-web-development/cmf.svg?branch=master)](https://travis-ci.org/osen-web-development/cmf)
 
-BoW CMS is a PHP ready-to-use CMS based on Symfony 2 framework
+The ready-to-use CMF sandbox  based on Symfony 2 Standard Edition framework.
 
-Based on Symfony Standard Edition
-=================================
+Deployment
+----------
+
+1) Clone from `Git` repository with following command:
+
+    git clone git@github.com:osen-web-development/cmf.git
+
+2) Install dependencies with `Composer`. Download it and run the
+following command:
+
+    php composer.phar install
+
+If you don't have `Composer` yet, download it following the instructions
+on http://getcomposer.org/ or just run the following command:
+
+    curl -s http://getcomposer.org/installer | php
+
+3) Create database with following command:
+
+    php app/console doctrine:database:create
+
+4) Create database schema with following command:
+
+    php app/console doctrine:schema:create
+
+If you can't execute `PHP` commands on server, you can use already generated
+`dump.sql` sandbox database dump file, placed in root folder of this project.
+
+5) Run `app.php` executable file with server, placed in `web` directory of
+this project. If you are developer, you can run `app_dev.php` file 
+from `localhost` with enabled debug mode.
+
+If you don't have server, you can run `Symfony` project with built-in
+php server following next [instructions][14].
+
+
+
+Symfony Standard Edition
+========================
 
 Welcome to the Symfony Standard Edition - a fully-functional Symfony2
 application that you can use as the skeleton for your new applications.
@@ -175,3 +212,4 @@ Enjoy!
 [11]: http://symfony.com/doc/2.4/cookbook/logging/monolog.html
 [12]: http://symfony.com/doc/2.4/cookbook/assetic/asset_management.html
 [13]: http://symfony.com/doc/2.4/bundles/SensioGeneratorBundle/index.html
+[14]: http://symfony.com/doc/current/quick_tour/the_big_picture.html#running-symfony
