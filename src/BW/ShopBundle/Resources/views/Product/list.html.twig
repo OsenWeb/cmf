@@ -32,6 +32,18 @@
                 <div class="products-list row level-row">
                     {% for entity in entities %}
                         {% include 'BWShopBundle:Product:row.html.twig' %}
+
+                        {% if loop.index % 3 == 0 %}
+                            <div class="clear visible-xs visible-s visible-m"></div>
+                        {% endif %}
+
+                        {% if loop.index % 4 == 0 %}
+                            <div class="clear visible-l"></div>
+                        {% endif %}
+
+                        {% if loop.index % 5 == 0 %}
+                            <div class="clear visible-xl"></div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
