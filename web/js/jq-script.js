@@ -1,0 +1,5 @@
+myjQ(function($) {
+
+    
+    
+});

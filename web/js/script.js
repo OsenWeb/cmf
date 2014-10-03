@@ -1,5 +1,0 @@
-myjQ(function($) {
-
-    
-    
-});
