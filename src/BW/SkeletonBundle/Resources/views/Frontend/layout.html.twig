@@ -10,7 +10,9 @@
 
 {% block css %}
     <!-- % CSS % -->
-    <link href="{{ asset('css/bootstrap-skeleton.css') }}" type="text/css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href="{{ asset('css/grid.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('css/alert.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
     
@@ -22,42 +24,58 @@
         var myjQ = jQuery.noConflict(true);
     }
     </script>
-    <script src="{{ asset('js/script.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/jq-script.js') }}" type="text/javascript"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="{{ asset('js/ng-app.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block header %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2">
-                <div id="logo">
-                    <a href="{{ path('home') }}">Logo</a>
-				</div>
-            </div>
-            <div class="col-lg-10">
-                {{ service('bw_user.widget').signIn()|raw }}
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div id="main_menu">
-                            <div id="bw_main_menu">
-                                <ul>
-                                    <li>
-                                        <a href="{{ path('product_list') }}">Product list</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('vendor_list') }}">Vendor list</a>
-                                    </li>
-                                </ul>
-                                {#{ service('bw_menu.widget').getMenu('main_menu', false)|raw }#}
-                            </div>
-                            <div id="bw_langs">
-                                {{ service('bw_localization.widget').langs()|raw }}
-                            </div>
-                        </div>
+
+            <div class="top-menu root row">
+                <div class="col">
+
+                </div>
+                <div class="col-r">
+                    <div class="col">
+                        {{ service('bw_user.widget').signIn()|raw }}
+                    </div>
+
+                    <div class="langs col">
+                        {{ service('bw_localization.widget').langs()|raw }}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="header root row">
+                <div class="logo col">
+                    <a href="{{ path('home') }}">osen-cmf</a>
+                </div>
+                <div class="col-r">
+                    <div class="search">
+                        {{ service('bw_blog.widget').searchForm()|raw }}
+                        <!-- <form action="">
+                            <input type="text" name="query">
+                            <button type="submit">Найти</button>
+                        </form> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-menu root">
+                <div class="col-xs-1-1">
+                    <div class="menu horisontal">
+                        <ul>
+                            <li>
+                                <a href="{{ path('product_list') }}">Product list</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('vendor_list') }}">Vendor list</a>
+                            </li>
+                        </ul>
+                        {#{ service('bw_menu.widget').getMenu('main_menu', false)|raw }#}
+                    </div>
+                </div>
+            </div>
 {% endblock %}
 
 {% block pre_content %}
@@ -71,36 +89,11 @@
 
 {% block footer %}
     <div class="line"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="copyright">
-                    Copyright &copy; 2008-{{ 'now'|date('Y') }}
-                </div>
-            </div>
-        </div>
+    <div class="copyright">
+        <div>Copyright &copy; 2008-{{ 'now'|date('Y') }}</div>
     </div>
 {% endblock %}
     
 {% block overflow %}
-    <script type="text/javascript">
-        function hideValue($) {
-            var elem = $('#email, #password');
-            if (elem.size() > 0) {
-                elem.each(function () {
-                    var defaultVal = $(this).val();
-                    $(this).focus(function () {
-                        if ($(this).val() == defaultVal) {
-                            $(this).val('');
-                        }
-                    }).blur(function () {
-                        if ($(this).val() == '') {
-                            $(this).val(defaultVal);
-                        }
-                    });
-                });
-            }
-        }
-        hideValue(myjQ);
-    </script>
+
 {% endblock %}

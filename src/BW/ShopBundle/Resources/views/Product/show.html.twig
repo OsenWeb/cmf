@@ -5,24 +5,39 @@
 {% block metaDescription %}{{ entity.metaDescription }}{% endblock %}
 
 {% block content -%}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ service('bw_blog.widget').lastPosts()|raw }}
-            </div>
-            <div class="col-lg-9">
-                <div class="product">
-                    <h1>
-                        {{ entity.heading }}
-                    </h1>
-                    {% if entity.productImages.count %}
-                        <div class="image">
-                            <img src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('large_thumb') }}"
-                                 alt="{{ entity.productImages.first.image.alt }}"
-                                 title="{{ entity.productImages.first.image.title }}"
-                            />
+    <div class="breadcrumbs root">
+        <div class="col-xs-1-1">
+            <a href="#">Главная</a>
+            <span class="separator">&gt;</span>
+            <a href="#">Волосы</a>
+            <span class="separator">&gt;</span>
+            <span>Волосы на заколках</span>
+        </div>
+    </div>
+
+    <div class="product-page page-content root row">
+        <div class="col-xs-1-1">
+            <h1>{{ entity.heading }}</h1>
+
+            <div class="product-card row level-row">                
+                {% if entity.productImages.count %}
+                    <div class="col-xs-5-12">
+                        <div class="slider" ng-controller="SliderController as sliderCtrl">
+                            <div class="slides">
+                                <img  src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('large_thumb') }}" alt="{{ entity.productImages.first.image.alt }}" title="{{ entity.productImages.first.image.title }}" ng-repeat="slide in sliderCtrl.slides" ng-src="{{'{{ slide.mediumImage }}'}}" ng-show="$index === sliderCtrl.currentSlide" alt="">
+
+                                <div class="slider-back back" ng-click="sliderCtrl.back()"></div>
+                                <div class="slider-forward forward" ng-click="sliderCtrl.forward()"></div>
+                            </div>
+                            <div class="slide-pager">
+                                <div class="slide-pager-item" ng-class="{'current-slide': sliderCtrl.checkCurrentSlide($index)}" ng-repeat="slide in sliderCtrl.slides">
+                                    <img src="" ng-src="{{'{{ slide.smallImage }}'}}" ng-click="sliderCtrl.setCurrentSlide($index)" alt="">
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
+                {% endif %}
+                <div class="col-xs-7-12">
                     {% if entity.category %}
                         <div class="category">
                             {#Категория: <a href="{{ path('category_show_by_slug', {'slug': entity.category.slug}) }}">#}
@@ -51,12 +66,130 @@
                     <div class="sku">
                         Артикул: {{ entity.sku }}
                     </div>
+
+                    <div class="short-description">
+                        Краткое описание: {{ entity.shortDescription|raw }}
+                    </div>
+
                     <div class="price">
                         Цена: {{ entity.price }} грн.
-                        <input class="btn btn-primary" type="button" value="Купить"/>
                     </div>
-                    <div class="short_description">
-                        Описание: {{ entity.description|raw }}
+
+                    <div class="add-to-cart">
+                        <form action="">
+                            <button type="submit" class="add-to-cart-button">Купить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-details row level-row">
+                <div class="col-xs-3-4" ng-controller="TabController as tabCtrl">
+                    <ul class="tabs">
+                        <li ng-class="{'active-tab': tabCtrl.isCurrentTab(0)}">
+                            <a href="" ng-click="tabCtrl.setCurrentTab(0)">описание</a>
+                        </li>
+                        <li ng-class="{'active-tab': tabCtrl.isCurrentTab(1)}">
+                            <a href="" ng-click="tabCtrl.setCurrentTab(1)">характеристики</a>
+                        </li>
+                        <li ng-class="{'active-tab': tabCtrl.isCurrentTab(2)}">
+                            <a href="" ng-click="tabCtrl.setCurrentTab(2)">отзывы</a>
+                        </li>
+                    </ul>
+                    <div class="product-description" ng-show="tabCtrl.isCurrentTab(0)">
+                        {{ entity.description|raw }}
+                    </div>
+                    <div ng-show="tabCtrl.isCurrentTab(1)">
+                        <div class="row level-row">
+                            <div class="col-xs-1-2">Сharacteristic-name</div>
+                            <div class="col-xs-1-2">Сharacteristic-val</div>
+                        </div>
+                        <div class="row level-row">
+                            <div class="col-xs-1-2">Сharacteristic-name</div>
+                            <div class="col-xs-1-2">Сharacteristic-val</div>
+                        </div>
+                        <div class="row level-row">
+                            <div class="col-xs-1-2">Сharacteristic-name</div>
+                            <div class="col-xs-1-2">Сharacteristic-val</div>
+                        </div>
+                        <div class="row level-row">
+                            <div class="col-xs-1-2">Сharacteristic-name</div>
+                            <div class="col-xs-1-2">Сharacteristic-val</div>
+                        </div>
+                    </div>
+                    <div class="reviews-list" ng-show="tabCtrl.isCurrentTab(2)">
+                        <div class="review row ">
+                            <div class="author-image col">
+                                <img src="images/reviewer.jpg" alt="">
+                            </div>
+                            <div class="data col">
+                                <div class="author col">Ирина Иванова</div>
+                                <div class="date col-r">8 сен 2014</div>
+                                <div class="content clear">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam sequi corporis eos recusandae error placeat totam minima, aliquam, adipisci. Adipisci qui illum quaerat, beatae ipsam quasi, laborum placeat debitis soluta.
+                                </div>
+                            </div>
+                            <div class="replies clear">
+                                <div class="reply">
+                                    <div class="author-image col">
+                                        <img src="images/replier.png" alt="">
+                                    </div>
+                                    <div class="data col">
+                                        <div class="author col">Admin StarLook</div>
+                                        <div class="date col-r">8 сен 2014</div>
+                                        <div class="content clear">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam sequi corporis eos recusandae error placeat totam minima, aliquam, adipisci. Adipisci qui illum quaerat, beatae ipsam quasi, laborum placeat debitis soluta.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review row ">
+                            <div class="author-image col">
+                                <img src="images/reviewer.jpg" alt="">
+                            </div>
+                            <div class="data col">
+                                <div class="author col">Ирина Иванова</div>
+                                <div class="date col-r">8 сен 2014</div>
+                                <div class="content clear">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam sequi corporis eos recusandae error placeat totam minima, aliquam, adipisci. Adipisci qui illum quaerat, beatae ipsam quasi, laborum placeat debitis soluta.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review row ">
+                            <div class="author-image col">
+                                <img src="images/reviewer.jpg" alt="">
+                            </div>
+                            <div class="data col">
+                                <div class="author col">Ирина Иванова</div>
+                                <div class="date col-r">8 сен 2014</div>
+                                <div class="content clear">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam sequi corporis eos recusandae error placeat totam minima, aliquam, adipisci. Adipisci qui illum quaerat, beatae ipsam quasi, laborum placeat debitis soluta.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="also-bought col-xs-1-4">
+                    <div class="h4 title dark">С этим товаром заказывают</div>
+                    <div class="product-item">
+                        <a href="product.html" class="product-preview">
+                            <img src="images/demo-prod-2.jpg" alt="">
+                        </a>
+                        <div class="product-name"><a href="product.html">Хвост накладной на ленте из искусственных термо-волос оттенок №2 темно-шоколадный</a></div>
+                    </div>
+                    <div class="product-item">
+                        <a href="product.html" class="product-preview">
+                            <img src="images/demo-prod-3.jpg" alt="">
+                        </a>
+                        <div class="product-name"><a href="product.html">Натуральные европейские вьющиеся волосы на трессе длиной 70 см оттенок №613</a></div>
+                    </div>
+                    <div class="product-item">
+                        <a href="product.html" class="product-preview">
+                            <img src="images/demo-prod-2.jpg" alt="">
+                        </a>
+                        <div class="product-name"><a href="product.html">Хвост накладной на ленте из искусственных термо-волос оттенок №2 темно-шоколадный</a></div>
                     </div>
                 </div>
             </div>

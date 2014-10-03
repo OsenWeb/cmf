@@ -12,37 +12,63 @@
 {% endblock %}
 
 {% block content -%}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ service('bw_blog.widget').lastPosts()|raw }}
-                {{ form(form) }}
-            </div>
-            <div class="col-lg-9">
-                <div class="category">
-                    <h1>
-                        {{ entity.heading }}
-                    </h1>
-                    {% if entity.parent %}
-                        <div class="category">
-                            Родительская категория:
-                            <a href="{{ app.request.uriForPath(entity.parent.route.path) }}">
-                                {{ entity.parent.heading }}
-                            </a>
-                        </div>
-                    {% endif %}
-                    <div class="description">
-                        {{ entity.description|raw }}
+    <div class="breadcrumbs root">
+        <div class="col-xs-1-1">
+            <a href="#">Главная</a>
+            <span class="separator">&gt;</span>
+            <a href="#">Волосы</a>
+            <span class="separator">&gt;</span>
+            <span>Волосы на заколках</span>
+        </div>
+    </div>
+
+    <div class="product-category-page root row">
+        <div class="product-filter col">
+            <div class="h4 title dark">Фильтр:</div>
+            {{ form(form) }}
+        </div>
+        <div class="product-category items-list page-content row">
+            <div class="col">
+                <h1>
+                    {{ entity.heading }}
+                </h1>
+                {% if entity.parent %}
+                    <div class="category">
+                        Родительская категория:
+                        <a href="{{ app.request.uriForPath(entity.parent.route.path) }}">
+                            {{ entity.parent.heading }}
+                        </a>
                     </div>
+                {% endif %}
+                <div class="description">
+                    {{ entity.description|raw }}
                 </div>
                 {% if pagination.getTotalItemCount %}
-                    <div class="products">
+                    <div class="row level-row">
+                        <div class="sort-condition col">
+                            Сортировать по: 
+                        </div>
+
+                        <div class="products-count col-r">
+                            Всего товаров: {{ pagination.getTotalItemCount }}
+                        </div>
+                    </div>
+                    <div class="products-list row level-row">
                         {% for product in pagination %}
                             {% include 'BWShopBundle:Product:row.html.twig' with {'entity': product} %}
+
+                            {% if loop.index % 3 == 0 %}
+                                <div class="clear visible-xs visible-s visible-m"></div>
+                            {% endif %}
+
+                            {% if loop.index % 4 == 0 %}
+                                <div class="clear visible-l"></div>
+                            {% endif %}
+
+                            {% if loop.index % 5 == 0 %}
+                                <div class="clear visible-xl"></div>
+                            {% endif %}
                         {% endfor %}
-                    </div>
-                    <div class="count">
-                        {{ pagination.getTotalItemCount }}
                     </div>
                     <div class="navigation">
                         {{ knp_pagination_render(pagination) }}
@@ -50,6 +76,7 @@
                 {% else %}
                     <div>Товары отстутствуют</div>
                 {% endif %}
+
             </div>
         </div>
     </div>

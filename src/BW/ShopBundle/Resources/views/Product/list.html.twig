@@ -3,21 +3,48 @@
 {% block title %}Список всех товаров {{ parent() }}{% endblock %}
 
 {% block content -%}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ service('bw_blog.widget').lastPosts()|raw }}
-                {#{{ form(service('bw_shop.service.product_filter').getProductFilterForm.createView) }}#}
-                {{ form(form) }}
-            </div>
-            <div class="col-lg-9">
-                <h1><i class="icon-list"></i> Все товары</h1>
-                <div class="count">
-                    Всего найдено: <strong>{{ entities|length }}</strong> товаров.
+    <div class="breadcrumbs root">
+        <div class="col-xs-1-1">
+            <a href="#">Главная</a>
+            <span class="separator">&gt;</span>
+            <a href="#">Волосы</a>
+            <span class="separator">&gt;</span>
+            <span>Волосы на заколках</span>
+        </div>
+    </div>
+
+    <div class="product-category-page root row">
+        <div class="product-filter col">
+            <div class="h4 title dark">Фильтр:</div>
+            {{ form(form) }}
+        </div>
+        <div class="product-category products-list items-list page-content row">
+            <div class="col">
+                <h1>Все товары</h1>
+                <div class="row level-row">
+                    <div class="sort-condition col">
+                        Сортировать по: 
+                    </div>
+
+                    <div class="products-count col-r">
+                        Всего товаров: {{ entities|length }}
+                    </div>
                 </div>
-                <div class="products">
+                <div class="products-list row level-row">
                     {% for entity in entities %}
                         {% include 'BWShopBundle:Product:row.html.twig' %}
+
+                        {% if loop.index % 3 == 0 %}
+                            <div class="clear visible-xs visible-s visible-m"></div>
+                        {% endif %}
+
+                        {% if loop.index % 4 == 0 %}
+                            <div class="clear visible-l"></div>
+                        {% endif %}
+
+                        {% if loop.index % 5 == 0 %}
+                            <div class="clear visible-xl"></div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

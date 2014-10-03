@@ -1,19 +1,19 @@
-<div class="product">
-    <h2>
+<div class="product-item col-xs-1-3 col-l-1-4 col-xl-1-5">
+    
+    {% if entity.productImages.count %}
+        {#<a href="{{ path('product_show_by_slug', {'slug': entity.slug}) }}">#}
+        <a href="{{ app.request.uriForPath(entity.route.path) }}" class="product-preview">
+            <img src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('middle_thumb') }}"
+                 alt="{{ entity.productImages.first.image.alt }}"
+                 title="{{ entity.productImages.first.image.title }}"
+            />
+        </a>
+    {% endif %}
+
+    <div class="product-name">
         {#<a href="{{ path('product_show_by_slug', {'slug': entity.slug}) }}">{{ entity.heading }}</a>#}
         <a href="{{ app.request.uriForPath(entity.route.path) }}">{{ entity.heading }}</a>
-    </h2>
-    {% if entity.productImages.count %}
-        <div class="image">
-            {#<a href="{{ path('product_show_by_slug', {'slug': entity.slug}) }}">#}
-            <a href="{{ app.request.uriForPath(entity.route.path) }}">
-                <img src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('middle_thumb') }}"
-                     alt="{{ entity.productImages.first.image.alt }}"
-                     title="{{ entity.productImages.first.image.title }}"
-                />
-            </a>
-        </div>
-    {% endif %}
+    </div>
     {% if entity.category %}
         <div class="category">
             {#Категория: <a href="{{ path('category_show_by_slug', {'slug': entity.category.slug}) }}">#}
@@ -39,6 +39,7 @@
             {% endif %}
         </div>
     {% endif %}
+
     {% if entity.productFields.count %}
         <div class="fields">
             {% for productField in entity.productFields %}
@@ -51,14 +52,22 @@
             {% endfor %}
         </div>
     {% endif %}
+
     <div class="sku">
         Артикул: {{ entity.sku }}
     </div>
-    <div class="price">
-        Цена: {{ entity.price }} грн.
-        <input class="btn btn-primary" type="button" value="Купить"/>
-    </div>
+
     <div class="short_description">
         Краткое описание: {{ entity.shortDescription|raw }}
+    </div>
+    
+    <div class="price">
+        {{ entity.price }} <span class="currency">грн.</span>
+    </div>
+
+    <div class="add-to-cart">
+        <form action="">
+            <button type="submit" class="add-to-cart-button">Купить</button>
+        </form>
     </div>
 </div>
