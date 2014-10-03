@@ -1,9 +1,9 @@
-<div class="vendor">
-    <h2>
+<div class="vendor-item col-xs-1-4 col-l-1-4 col-xl-1-5">
+    <div class="h3">
         <a href="{{ path('vendor_show_by_slug', {'slug': entity.slug}) }}" title="Просмотреть товары производителя">
             {{ entity.heading }}
         </a>
-    </h2>
+    </div>
     {% if entity.image %}
         <div class="image">
             <a href="{{ path('vendor_show_by_slug', {'slug': entity.slug}) }}">

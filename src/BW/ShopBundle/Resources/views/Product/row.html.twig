@@ -56,6 +56,10 @@
     <div class="sku">
         Артикул: {{ entity.sku }}
     </div>
+
+    <div class="short_description">
+        Краткое описание: {{ entity.shortDescription|raw }}
+    </div>
     
     <div class="price">
         {{ entity.price }} <span class="currency">грн.</span>
@@ -65,9 +69,5 @@
         <form action="">
             <button type="submit" class="add-to-cart-button">Купить</button>
         </form>
-    </div>
-
-    <div class="short_description">
-        Краткое описание: {{ entity.shortDescription|raw }}
     </div>
 </div>

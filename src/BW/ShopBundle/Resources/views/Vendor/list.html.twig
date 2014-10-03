@@ -3,17 +3,35 @@
 {% block title %}Список всех производителей {{ parent() }}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ service('bw_blog.widget').lastPosts()|raw }}
-                {{ form(form) }}
-            </div>
-            <div class="col-lg-9">
+    <div class="breadcrumbs root">
+        <div class="col-xs-1-1">
+            <a href="#">Главная</a>
+            <span class="separator">&gt;</span>
+            <a href="#">Волосы</a>
+            <span class="separator">&gt;</span>
+            <span>Волосы на заколках</span>
+        </div>
+    </div>
+
+    <div class="product-category-page root row">
+        <div class="product-filter col">
+            <div class="h4 title dark">Фильтр:</div>
+            {{ form(form) }}
+        </div>
+        <div class="product-vendor-list items-list page-content row">
+            <div class="col">
                 <h1>Все производители</h1>
-                <div class="vendors">
+                <div class="vendors-list row level-row">
                     {% for entity in entities %}
                         {% include 'BWShopBundle:Vendor:row.html.twig' %}
+
+                        {% if loop.index % 4 == 0 %}
+                            <div class="clear visible-xs visible-s visible-m visible-l"></div>
+                        {% endif %}
+
+                        {% if loop.index % 5 == 0 %}
+                            <div class="clear visible-xl"></div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

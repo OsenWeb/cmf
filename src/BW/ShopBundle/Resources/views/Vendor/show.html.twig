@@ -12,13 +12,23 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ service('bw_blog.widget').lastPosts()|raw }}
-                {{ form(form) }}
-            </div>
-            <div class="col-lg-9">
+    <div class="breadcrumbs root">
+        <div class="col-xs-1-1">
+            <a href="#">Главная</a>
+            <span class="separator">&gt;</span>
+            <a href="#">Волосы</a>
+            <span class="separator">&gt;</span>
+            <span>Волосы на заколках</span>
+        </div>
+    </div>
+
+    <div class="product-category-page root row">
+        <div class="product-filter col">
+            <div class="h4 title dark">Фильтр:</div>
+            {{ form(form) }}
+        </div>
+        <div class="product-vendor items-list page-content row">
+            <div class="col">
                 <div class="vendor">
                     <h1>{{ entity.heading }}</h1>
                     {% if entity.image %}
@@ -28,15 +38,21 @@
                     {% endif %}
                     <div>{{ entity.description|raw }}</div>
                 </div>
-                <h2>Все товары производителя</h2>
+                <div class="h2">Все товары производителя</div>
                 {% if pagination.getTotalItemCount %}
-                    <div class="products">
+                    <div class="row level-row">
+                        <div class="sort-condition col">
+                            Сортировать по: 
+                        </div>
+
+                        <div class="products-count col-r">
+                            Всего товаров: {{ pagination.getTotalItemCount }}
+                        </div>
+                    </div>
+                    <div class="products-list row level-row">
                         {% for product in pagination %}
                             {% include 'BWShopBundle:Product:row.html.twig' with {'entity': product} %}
                         {% endfor %}
-                    </div>
-                    <div class="count">
-                        {{ pagination.getTotalItemCount }}
                     </div>
                     <div class="navigation">
                         {{ knp_pagination_render(pagination) }}

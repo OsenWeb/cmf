@@ -110,7 +110,7 @@ h1, .h1 {
 }
 
 h2, .h2 {
-
+    font-size: 1.71em; /* 24px */
 }
 
 h3, .h3 {
@@ -643,7 +643,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     border-image: url(../images/dotted-bd-img.png) 1 repeat repeat;
 }
 
-.vendors-list > li {
+.vendors-list > .vendor-item {
     padding: 0;
     border-right: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
@@ -841,11 +841,11 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     margin-bottom: 30px;
 }
 
-.product-category {
+.items-list {
     margin-left: 17.14em;
 }
 
-.product-category > .col {
+.items-list > .col {
     width: 100%;
 }
 
