@@ -1,5 +1,22 @@
 {% extends 'BWSkeletonBundle:Frontend:layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block choice_widget_expanded -%}
+    {% set attr = {'class': 'field-params'} %}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="field-param">
+                <span class="field-param-name col">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child) -}}
+                </span>
+                <span class="results-count col-r">(5)</span>
+            </div>
+        {% endfor -%}
+    </div>
+{% endblock choice_widget_expanded %}
+
 {% block title %}Список всех товаров {{ parent() }}{% endblock %}
 
 {% block content -%}
@@ -16,6 +33,34 @@
     <div class="product-category-page root row">
         <div class="product-filter col">
             <div class="h4 title dark">Фильтр:</div>
+            ===========DEMO==========
+            <div class="filter-field">
+                <div class="field-name">Цена:</div>
+                <div class="field-params">
+                    <div class="field-param">
+                        <input type="checkbox" id="price-1">
+                        <label for="price-1" class="row">
+                            <span class="field-param-name col">1 - 500</span>
+                            <span class="results-count col-r">(5)</span>
+                        </label>
+                    </div>
+                    <div class="field-param">
+                        <input type="checkbox" id="price-2">
+                        <label for="price-2" class="row">
+                            <span class="field-param-name col">500 - 1000</span>
+                            <span class="results-count col-r">(5)</span>
+                        </label>
+                    </div>
+                    <div class="field-param">
+                        <input type="checkbox" id="price-3">
+                        <label for="price-3" class="row">
+                            <span class="field-param-name col">1000 - 1500</span>
+                            <span class="results-count col-r">(5)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            =========================
             {{ form(form) }}
         </div>
         <div class="product-category products-list items-list page-content row">

@@ -8,6 +8,8 @@ use BW\ShopBundle\Entity\ProductField;
 use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Form\ProductType;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\QueryBuilder;
@@ -93,6 +95,7 @@ class ProductController extends Controller
      */
     public function listAction($filterQuery)
     {
+        $conn = $this->get('database_connection');
         $em = $this->getDoctrine()->getManager();
 
         // Get array of property IDs from filter query string
@@ -111,57 +114,84 @@ class ProductController extends Controller
         $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
         $qb
             ->addSelect('r')
-            ->addSelect('v')
             ->addSelect('c')
             ->addSelect('cr')
-            ->leftJoin('p.route', 'r')
+            ->addSelect('v')
+            ->addSelect('vi')
+            ->addSelect('pf')
+            ->addSelect('f')
+            ->addSelect('prop')
+            ->addSelect('pi')
+            ->addSelect('i')
+            ->innerJoin('p.route', 'r')
+            ->innerJoin('p.category', 'c')
+            ->innerJoin('c.route', 'cr')
             ->leftJoin('p.vendor', 'v')
-            ->leftJoin('p.category', 'c')
-            ->leftJoin('c.route', 'cr')
+            ->leftJoin('v.image', 'vi')
+            ->innerJoin('p.productFields', 'pf')
+            ->innerJoin('pf.field', 'f')
+            ->innerJoin('pf.properties', 'prop')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('pi.image', 'i')
             ->where('p.published = 1')
             ->orderBy('p.created', 'ASC')
         ;
+
+        // filter products by properties
         if ($properties) {
-            $qb
-//                ->addSelect('pf')
-//                ->addSelect('pr')
-                ->leftJoin('p.productFields', 'pf')
-                ->innerJoin('pf.properties', 'pr')
+            /** @var QueryBuilder $qb2 */
+            $qb2 = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+            $qb2
+                ->select('p.id') // select only product ID column !
+                ->innerJoin('p.route', 'r')
+                ->innerJoin('p.category', 'c')
+                ->innerJoin('c.route', 'cr')
+                ->leftJoin('p.vendor', 'v')
+                ->leftJoin('v.image', 'vi')
+
+                ->innerJoin('p.productFields', 'pf')
+                ->innerJoin('pf.field', 'f')
+                ->innerJoin('pf.properties', 'prop')
+
+                ->where('p.published = 1')
             ;
 
-            $fields = [];
+            /* Get array of product IDs */
+            $propertyIds = [];
+            $groupPropertyIds = [];
             /** @var Property $property */
             foreach ($properties as $property) {
                 $propertyIds[] = $property->getId();
                 $groupPropertyIds[$property->getField()->getId()][] = $property->getId();
             }
 
+            /** @var Connection $conn */
+            $query = $qb2->getQuery()->getSQL();
+            $query .= " AND c8_.id IN (?)"; // filter by property IDs
+            $query .= " GROUP BY s0_.id"; // group by product ID
+            // filter by count of product-field IDs
+            $query .= " HAVING COUNT(DISTINCT CONCAT_WS('-', s6_.product_id, s6_.field_id)) = ?";
+
+            $stmt = $conn->executeQuery($query, [
+                $propertyIds,
+                count($groupPropertyIds),
+            ], [
+                Connection::PARAM_INT_ARRAY,
+                \PDO::PARAM_INT,
+            ]);
+            $productIds = [];
+            while ($row = $stmt->fetch(\PDO::FETCH_COLUMN)) {
+                $productIds[] = $row;
+            }
+            /* /Get array of product IDs */
+
             $qb
-                ->andWhere('pr.id IN (:properties)')
-                ->groupBy('p.id')
-                ->having('COUNT(p.id) = :count')
-                ->setParameter('properties', $propertyIds)
-                ->setParameter('count', count($groupPropertyIds)) // Count affected custom fields
+                ->andWhere('p.id IN (:product_ids)')
+                ->setParameter('product_ids', $productIds)
             ;
         }
+
         $entities = $qb->getQuery()->getResult(); // Collection of products
-//SELECT
-//	-- COUNT(sp.id),
-//	sp.heading,
-//	spcf.product_id, spcf.field_id,
-//	cf.name,
-//	cp.id, cp.name
-//FROM shop_products AS sp
-//LEFT JOIN shop_product_custom_fields AS spcf
-//	ON spcf.product_id = sp.id
-//LEFT JOIN custom_fields AS cf
-//	ON cf.id = spcf.field_id
-//LEFT JOIN product_field_property AS pfp
-//	ON pfp.product_field_id = spcf.id
-//LEFT JOIN custom_properties AS cp
-//	ON cp.id = pfp.property_id
-//WHERE cp.id IN (9,3,4)
-//	-- GROUP BY sp.id
 
         return $this->render('BWShopBundle:Product:list.html.twig', array(
             'entities' => $entities,
