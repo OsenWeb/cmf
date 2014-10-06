@@ -1,4 +1,4 @@
-<div class="user-widget">
+<div class="user-widget" ng-controller="UserWidgetController as userFormCtrl">
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div>
             Вы авторизированы как: 
@@ -25,19 +25,33 @@
             {% endif %}
         </div>
     {% else %}
-        <form id="auth-form" action="{{ path('user_sign_in_check') }}" method="POST">
-            <input id="email" type="text" name="_username" size="40" value="e-mail or login..." required="required">
-            <input id="password" type="password" name="_password" size="40" placeholder="password..." required="required">
+        <div class="user-menu menu horisontal">
+            <ul>
+                <li><a href="#" ng-click="userFormCtrl.toggleFormVisibility()">Вход</a></li>
+                <li><a href="{{ path('user_sign_up') }}" class="registration">Зарегистрироваться</a></li>
+            </ul>
+        </div>
+        <form id="auth-form" class="auth-form" ng-show="userFormCtrl.showSignInForm" action="{{ path('user_sign_in_check') }}" method="POST">
+            <div class="form-field">
+                <input id="email" type="text" name="_username" size="40" placeholder="e-mail or login..." required="required">
+            </div>
+            <div class="form-field">
+                <input id="password" type="password" name="_password" size="40" placeholder="password..." required="required">
+            </div>
             {#
                 If you want to control the URL the user
                 is redirected to on success (more details below)
             #}
-            <input type="hidden" name="_target_path" value="{{ url('home') }}" />
-            <button type="submit">Войти</button>
-            {# Авторизация через соц.сети #}
-            {% include 'BWUserBundle:User/social:sign-in-thumbs.html.twig' %}
-            <div>
-                <a href="{{ path('user_sign_up') }}" class="registration">Зарегистрироваться</a> | <a href="{{ path('user_password_reset') }}" class="reset-password">Забыли пароль?</a>
+            <input type="hidden" name="_target_path" value="{{ url('home') }}" />            
+            <div class="forgot-pass">
+                <a href="{{ path('user_password_reset') }}" class="reset-password">Забыли пароль?</a>
+            </div>
+            <div class="form-field form-submit">
+                <button type="submit">Войти</button>
+            </div>
+            <div class="social-auth">
+                {# Авторизация через соц.сети #}
+                {% include 'BWUserBundle:User/social:sign-in-thumbs.html.twig' %}
             </div>
         </form>
     {% endif %}
