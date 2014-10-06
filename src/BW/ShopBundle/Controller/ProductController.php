@@ -113,19 +113,47 @@ class ProductController extends Controller
         /** @var QueryBuilder $qb */
         $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
         $qb
-            ->select('p.id')
-            ->leftJoin('p.route', 'r')
+            ->addSelect('r')
+            ->addSelect('c')
+            ->addSelect('cr')
+            ->addSelect('v')
+            ->addSelect('vi')
+            ->addSelect('pf')
+            ->addSelect('f')
+            ->addSelect('prop')
+            ->addSelect('pi')
+            ->addSelect('i')
+            ->innerJoin('p.route', 'r')
+            ->innerJoin('p.category', 'c')
+            ->innerJoin('c.route', 'cr')
             ->leftJoin('p.vendor', 'v')
-            ->leftJoin('p.category', 'c')
-            ->leftJoin('c.route', 'cr')
+            ->leftJoin('v.image', 'vi')
+            ->innerJoin('p.productFields', 'pf')
+            ->innerJoin('pf.field', 'f')
+            ->innerJoin('pf.properties', 'prop')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('pi.image', 'i')
             ->where('p.published = 1')
+            ->orderBy('p.created', 'ASC')
         ;
 
+        // filter products by properties
         if ($properties) {
-            $qb
-                ->leftJoin('p.productFields', 'pf')
-                ->leftJoin('pf.field', 'f')
-                ->innerJoin('pf.properties', 'pr')
+            /** @var QueryBuilder $qb2 */
+            $qb2 = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+            $qb2
+                ->select('p.id') // select only product ID column !
+                ->innerJoin('p.route', 'r')
+                ->innerJoin('p.category', 'c')
+                ->innerJoin('c.route', 'cr')
+                ->leftJoin('p.vendor', 'v')
+                ->leftJoin('v.image', 'vi')
+
+                ->innerJoin('p.productFields', 'pf')
+                ->innerJoin('pf.field', 'f')
+                ->innerJoin('pf.properties', 'prop')
+
+                ->where('p.published = 1')
             ;
 
             /* Get array of product IDs */
@@ -138,10 +166,11 @@ class ProductController extends Controller
             }
 
             /** @var Connection $conn */
-            $query = $qb->getQuery()->getSQL();
-            $query .= " AND c7_.id IN (?)";
-            $query .= " GROUP BY s0_.id";
-            $query .= " HAVING COUNT(DISTINCT CONCAT_WS('-', s5_.product_id, s5_.field_id)) = ?";
+            $query = $qb2->getQuery()->getSQL();
+            $query .= " AND c8_.id IN (?)"; // filter by property IDs
+            $query .= " GROUP BY s0_.id"; // group by product ID
+            // filter by count of product-field IDs
+            $query .= " HAVING COUNT(DISTINCT CONCAT_WS('-', s6_.product_id, s6_.field_id)) = ?";
 
             $stmt = $conn->executeQuery($query, [
                 $propertyIds,
@@ -157,24 +186,11 @@ class ProductController extends Controller
             /* /Get array of product IDs */
 
             $qb
-                ->addSelect('pf')
-                ->addSelect('f')
-                ->addSelect('pr')
                 ->andWhere('p.id IN (:product_ids)')
                 ->setParameter('product_ids', $productIds)
             ;
         }
 
-        $qb
-            ->select('p')
-            ->addSelect('r')
-            ->addSelect('v')
-            ->addSelect('c')
-            ->addSelect('cr')
-            ->orderBy('p.created', 'ASC')
-        ;
-
-        // @TODO Need to be optimized !!!
         $entities = $qb->getQuery()->getResult(); // Collection of products
 
         return $this->render('BWShopBundle:Product:list.html.twig', array(
