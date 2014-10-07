@@ -27,11 +27,11 @@
     {% else %}
         <div class="user-menu menu horisontal">
             <ul>
-                <li ng-class="{'active-dd': ddCtrl.showElement}"><a href="#" ng-click="ddCtrl.toggleElVisibility()">Вход</a></li>
+                <li ng-class="{'active-dd': ddCtrl.showElement()}"><a href="#" ng-click="ddCtrl.toggleElVisibility()">Вход</a></li>
                 <li><a href="{{ path('user_sign_up') }}" class="registration">Зарегистрироваться</a></li>
             </ul>
         </div>
-        <form id="auth-form" class="auth-form ng-cloak" ng-show="ddCtrl.showElement" action="{{ path('user_sign_in_check') }}" method="POST">
+        <form id="auth-form" class="auth-form ng-cloak" ng-show="ddCtrl.showElement()" action="{{ path('user_sign_in_check') }}" method="POST">
             <div class="form-field">
                 <input id="email" type="text" name="_username" size="40" placeholder="e-mail or login..." required="required">
             </div>

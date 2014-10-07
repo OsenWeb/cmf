@@ -10,7 +10,7 @@
 
         this.isCurrentTab = function(tab) {
             return this.currentTab === tab;
-        }
+        };
     });
 
     app.controller("SliderController", function() {
@@ -20,36 +20,48 @@
 
         this.checkCurrentSlide = function(slideIndex) {
             return slideIndex === this.currentSlide;
-        }
+        };
 
         this.setCurrentSlide = function(slideIndex) {
             this.currentSlide = slideIndex;
-        }
+        };
 
         this.back = function() {
             if(this.currentSlide > 0) {
                 this.currentSlide -= 1;
             } else {
                 this.currentSlide = this.slides.length - 1;
-            }
-        }
+            };
+        };
 
         this.forward = function() {
             if(this.currentSlide < this.slides.length - 1) {
                 this.currentSlide += 1;
             } else {
                 this.currentSlide = 0;
-            }
-        }
+            };
+        };
     });
 
-    app.controller("DropdownController", function() {
-        this.showElement = false;
+    app.factory('dd', function() {
+        var dd = {
+            currentDropdown: undefined,
+            setCurrentDropdown: function(dropdown) {
+                this.currentDropdown = dropdown;
+            }
+        };
+        return dd;
+    });
+
+    app.controller("DropdownController", ['dd', function(dd) {
+        this.showElement = function() {
+            return this === dd.currentDropdown;
+        };
 
         this.toggleElVisibility = function() {
-            this.showElement = !this.showElement;
-        }
-    });
+            dd.setCurrentDropdown(this);
+        };
+    }]);
 
 })();
 
