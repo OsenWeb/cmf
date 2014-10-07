@@ -279,13 +279,31 @@ class VendorController extends Controller
         /** @var QueryBuilder $qb */
         $qb = $em->getRepository('BWShopBundle:Vendor')->createQueryBuilder('v');
         $qb
+            ->addSelect('p')
+            ->addSelect('r')
+            ->addSelect('c')
+            ->addSelect('cr')
+            ->addSelect('vi')
+            ->addSelect('pf')
+            ->addSelect('f')
+            ->addSelect('prop')
+            ->addSelect('pi')
             ->addSelect('i')
-            ->leftJoin('v.image', 'i')
+            ->leftJoin('v.products', 'p')
+            ->leftJoin('p.route', 'r')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('c.route', 'cr')
+            ->leftJoin('v.image', 'vi')
+            ->leftJoin('p.productFields', 'pf')
+            ->leftJoin('pf.field', 'f')
+            ->leftJoin('pf.properties', 'prop')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('pi.image', 'i')
             ->where($qb->expr()->eq('v.slug', ':slug'))
             ->setParameter('slug', $slug)
+            ->orderBy('p.created', 'ASC')
         ;
-        /** @var Vendor $entity */
-        $entity = $qb->getQuery()->getOneOrNullResult();
+        $entity = $qb->getQuery()->getOneOrNullResult(); // Vendor entity
         if ( ! $entity) {
             throw $this->createNotFoundException('Unable to find Vendor entity.');
         }

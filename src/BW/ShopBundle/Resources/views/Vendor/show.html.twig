@@ -14,18 +14,17 @@
 {% block content %}
     <div class="breadcrumbs root">
         <div class="col-xs-1-1">
-            <a href="#">Главная</a>
+            <a href="{{ path('home') }}">Главная</a>
             <span class="separator">&gt;</span>
-            <a href="#">Волосы</a>
+            <a href="{{ path('vendor_list') }}">Все производители</a>
             <span class="separator">&gt;</span>
-            <span>Волосы на заколках</span>
+            <span>{{ entity.heading }}</span>
         </div>
     </div>
 
     <div class="product-category-page root row">
         <div class="product-filter col">
-            <div class="h4 title dark">Фильтр:</div>
-            {{ form(form) }}
+            {% include 'BWShopBundle:Filter:form.html.twig' %}
         </div>
         <div class="product-vendor items-list page-content row">
             <div class="col">
