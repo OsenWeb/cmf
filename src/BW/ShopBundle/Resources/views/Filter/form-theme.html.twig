@@ -42,8 +42,8 @@
             <div class="field-name">{{ label|trans({}, translation_domain) }}:</div>
         {%- else -%}
             <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            <span class="field-param-name col">{{ label|trans({}, translation_domain) }}</span>
-            <span class="results-count col-r">({{ random(20) }})</span>
+                <span class="field-param-name col">{{ label|trans({}, translation_domain) }}</span>
+                {#<span class="results-count col-r">({{ random(20) }})</span>#}
             </label>
         {%- endif %}
     {%- endif %}

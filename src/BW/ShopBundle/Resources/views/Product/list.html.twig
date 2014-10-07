@@ -1,7 +1,5 @@
 {% extends 'BWSkeletonBundle:Frontend:layout.html.twig' %}
 
-{% form_theme form 'BWShopBundle:Filter:form-theme.html.twig' %}
-
 {% block title %}Список всех товаров {{ parent() }}{% endblock %}
 
 {% block content -%}
@@ -18,6 +16,7 @@
     <div class="product-category-page root row">
         <div class="product-filter col">
             <div class="h4 title dark">Фильтр:</div>
+            {% form_theme form 'BWShopBundle:Filter:form-theme.html.twig' %}
             {{ form(form) }}{# Using custom form theme #}
         </div>
         <div class="product-category products-list items-list page-content row">
