@@ -24,8 +24,7 @@
 
     <div class="product-category-page root row">
         <div class="product-filter col">
-            <div class="h4 title dark">Фильтр:</div>
-            {{ form(form) }}
+            {% include 'BWShopBundle:Filter:form.html.twig' %}
         </div>
         <div class="product-vendor items-list page-content row">
             <div class="col">
