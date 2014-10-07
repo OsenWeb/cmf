@@ -236,8 +236,21 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     color: #262626;
 }
 
+.localization-widget {
+    position: relative;
+}
+
 .localization-widget > li > ul {
-    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    
+    padding: 10px;
+    border: 1px solid #262626;
+
+    background-color: #fff;
+
+    z-index: 999;
 }
 
 .menu.horisontal > ul:after {

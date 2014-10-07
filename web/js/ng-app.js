@@ -43,11 +43,11 @@
         }
     });
 
-    app.controller("UserWidgetController", function() {
-        this.showSignInForm = false;
+    app.controller("DropdownController", function() {
+        this.showElement = false;
 
-        this.toggleFormVisibility = function() {
-            this.showSignInForm = !this.showSignInForm;
+        this.toggleElVisibility = function() {
+            this.showElement = !this.showElement;
         }
     });
 
