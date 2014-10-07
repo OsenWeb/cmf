@@ -180,7 +180,8 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-
+    
+    max-width: 100%;
     margin: 0;
     padding: 6px 15px;
     border: 1px solid  #4d4d4d;
@@ -1016,4 +1017,43 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .g-map {
     height: 600px;
+}
+
+.user-widget {
+    position: relative;
+}
+
+.auth-form {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 300px; 
+    border: 1px solid #262626;  
+
+    background-color: #fff;
+    z-index: 999;
+    padding: 20px;
+}
+
+.auth-form .form-field {
+    margin-bottom: 20px;
+}
+
+.forgot-pass {
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.form-submit {
+    text-align: center;
+}
+
+.form-submit button {
+    max-width: 100%;
+    width: 70%;
+}
+
+.social-auth {
+    text-align: center;
 }

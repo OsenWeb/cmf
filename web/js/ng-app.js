@@ -1,5 +1,5 @@
 (function() {
-    var app = angular.module("shop", []);
+    var app = angular.module("cmf", []);
 
     app.controller("TabController", function() {
         this.currentTab = 0;
@@ -40,6 +40,14 @@
             } else {
                 this.currentSlide = 0;
             }
+        }
+    });
+
+    app.controller("UserWidgetController", function() {
+        this.showSignInForm = false;
+
+        this.toggleFormVisibility = function() {
+            this.showSignInForm = !this.showSignInForm;
         }
     });
 
