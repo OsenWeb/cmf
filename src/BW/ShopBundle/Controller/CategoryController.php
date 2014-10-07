@@ -134,15 +134,27 @@ class CategoryController extends Controller
             $entity->getProperty(),
         ));
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        /** @var QueryBuilder $qb */
         $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
         $qb
-            ->addSelect('v')
+            ->addSelect('r')
             ->addSelect('c')
+            ->addSelect('cr')
+            ->addSelect('v')
+            ->addSelect('vi')
+            ->addSelect('pf')
+            ->addSelect('f')
+            ->addSelect('prop')
             ->addSelect('pi')
             ->addSelect('i')
-            ->innerJoin('p.vendor', 'v')
+            ->leftJoin('p.route', 'r')
             ->leftJoin('p.category', 'c')
+            ->leftJoin('c.route', 'cr')
+            ->leftJoin('p.vendor', 'v')
+            ->leftJoin('v.image', 'vi')
+            ->leftJoin('p.productFields', 'pf')
+            ->leftJoin('pf.field', 'f')
+            ->leftJoin('pf.properties', 'prop')
             ->leftJoin('p.productImages', 'pi')
             ->leftJoin('pi.image', 'i')
             ->where($qb->expr()->eq('p.published', true))

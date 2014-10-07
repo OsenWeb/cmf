@@ -7,11 +7,19 @@
 {% block content -%}
     <div class="breadcrumbs root">
         <div class="col-xs-1-1">
-            <a href="#">Главная</a>
+            <a href="{{ path('home') }}">Главная</a>
             <span class="separator">&gt;</span>
-            <a href="#">Волосы</a>
+            <a href="{{ path('product_list') }}">Все товары</a>
+            {% if entity.category and entity.category.parent %}
+                <span class="separator">&gt;</span>
+                <a href="{{ app.request.uriForPath(entity.category.parent.route.path) }}">{{ entity.category.parent.heading }}</a>
+            {% endif %}
+            {% if entity.category %}
+                <span class="separator">&gt;</span>
+                <a href="{{ app.request.uriForPath(entity.category.route.path) }}">{{ entity.category.heading }}</a>
+            {% endif %}
             <span class="separator">&gt;</span>
-            <span>Волосы на заколках</span>
+            <span>{{ entity.heading }}</span>
         </div>
     </div>
 

@@ -14,11 +14,15 @@
 {% block content -%}
     <div class="breadcrumbs root">
         <div class="col-xs-1-1">
-            <a href="#">Главная</a>
+            <a href="{{ path('home') }}">Главная</a>
             <span class="separator">&gt;</span>
-            <a href="#">Волосы</a>
+            <a href="{{ path('product_list') }}">Все товары</a>
+            {% if entity.parent %}
+                <span class="separator">&gt;</span>
+                <a href="{{ app.request.uriForPath(entity.parent.route.path) }}">{{ entity.parent.heading }}</a>
+            {% endif %}
             <span class="separator">&gt;</span>
-            <span>Волосы на заколках</span>
+            <span>{{ entity.heading }}</span>
         </div>
     </div>
 
