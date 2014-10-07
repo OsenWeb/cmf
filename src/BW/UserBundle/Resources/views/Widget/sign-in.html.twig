@@ -27,7 +27,7 @@
     {% else %}
         <div class="user-menu menu horisontal">
             <ul>
-                <li ng-class="{'active': ddCtrl.showElement}"><a href="#" ng-click="ddCtrl.toggleElVisibility()">Вход</a></li>
+                <li ng-class="{'active-dd': ddCtrl.showElement}"><a href="#" ng-click="ddCtrl.toggleElVisibility()">Вход</a></li>
                 <li><a href="{{ path('user_sign_up') }}" class="registration">Зарегистрироваться</a></li>
             </ul>
         </div>

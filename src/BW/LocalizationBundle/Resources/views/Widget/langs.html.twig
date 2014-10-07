@@ -1,13 +1,13 @@
 <ul class="localization-widget" ng-controller="DropdownController as ddCtrl">
-    <li class="has-child" ng-class="{'active': ddCtrl.showElement}">
+    <li class="has-child" ng-class="{'active-dd': ddCtrl.showElement}">
         <a href="javascript:void(0)" ng-click="ddCtrl.toggleElVisibility()">{{ 'localization.lang'|trans }}: {{ app.request.locale|upper }}</a> 
         <ul ng-show="ddCtrl.showElement" class="ng-cloak">
             {% for lang in langs %}
-                <li class="">
+                <li class="{% if app.request.locale == lang.sign %}current{% endif %}">
                     {% if app.request.locale == lang.sign %}
-                        <a href="javascript:void(0)"><i class="icon-flag-alt before-padding"></i><strong>{{ lang.name }}&nbsp;({{ lang.sign }})</strong></a>
+                        <a href="javascript:void(0)">{{ lang.name }}&nbsp;({{ lang.sign }})</a>
                     {% else %}
-                        <a href="{{ app.request.requestUri|replace({('/'~ app.request.locale ~'/'): ('/'~ lang.sign ~'/')}) }}"><i class="icon-flag-alt before-padding"></i>{{ lang.name }}&nbsp;({{ lang.sign }})</a>
+                        <a href="{{ app.request.requestUri|replace({('/'~ app.request.locale ~'/'): ('/'~ lang.sign ~'/')}) }}">{{ lang.name }}&nbsp;({{ lang.sign }})</a>
                     {% endif %}
                 </li>
             {% endfor %}
