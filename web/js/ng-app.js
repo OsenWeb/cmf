@@ -59,7 +59,11 @@
         };
 
         this.toggleElVisibility = function() {
-            dd.setCurrentDropdown(this);
+            if(this === dd.currentDropdown) {
+                dd.setCurrentDropdown(undefined);
+            } else {
+                dd.setCurrentDropdown(this);
+            }
         };
     }]);
 
