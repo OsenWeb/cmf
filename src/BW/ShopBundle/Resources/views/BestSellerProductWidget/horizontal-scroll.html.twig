@@ -1,0 +1,15 @@
+{% if entities %}
+    <div class="h1 line-header"><span>Хиты продаж</span></div>
+
+    <div class="carousel product-carousel">
+        <div class="carousel-wrap">
+            <div class="carousel-inner">
+                {% for entity in entities %}
+                    {% include 'BWShopBundle:Product:show-in-widget.html.twig' %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="carousel-back back"></div>
+        <div class="carousel-forward forward"></div>
+    </div>
+{% endif %}

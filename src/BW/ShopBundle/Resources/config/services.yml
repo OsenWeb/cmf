@@ -1,6 +1,9 @@
 parameters:
 #    bw_shop.example.class: BW\ShopBundle\Example
     bw_shop.service.product_filter.class: BW\ShopBundle\Service\ProductFilterService
+    bw_shop.service.discount_product_widget.class: BW\ShopBundle\Service\DiscountProductWidgetService
+    bw_shop.service.best_seller_product_widget.class: BW\ShopBundle\Service\BestSellerProductWidgetService
+    bw_shop.service.recent_product_widget.class: BW\ShopBundle\Service\RecentProductWidgetService
 
 services:
 #    bw_shop.example:
@@ -10,3 +13,15 @@ services:
     bw_shop.service.product_filter:
         class: %bw_shop.service.product_filter.class%
         arguments: ["@service_container"]
+
+    bw_shop.service.discount_product_widget:
+        class: %bw_shop.service.discount_product_widget.class%
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+
+    bw_shop.service.best_seller_product_widget:
+        class: %bw_shop.service.best_seller_product_widget.class%
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+
+    bw_shop.service.recent_product_widget:
+        class: %bw_shop.service.recent_product_widget.class%
+        arguments: ["@doctrine.orm.entity_manager", "@templating"]

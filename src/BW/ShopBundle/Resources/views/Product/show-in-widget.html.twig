@@ -1,0 +1,23 @@
+<div class="carousel-item product-item">
+    {% if entity.productImages.first %}
+        <a href="{{ app.request.uriForPath(entity.route.path) }}" class="product-preview">
+            <img src="{{ asset(entity.productImages.first.image.webPath) }}" alt="{{ entity.productImages.first.image.alt }}" title="{{ entity.productImages.first.image.title }}">
+        </a>
+    {% endif %}
+    <div class="product-name">
+        <a href="{{ app.request.uriForPath(entity.route.path) }}">{{ entity.heading }}</a>
+    </div>
+    {% if entity.discountPrice %}
+        <div class="old-price">
+            {{ entity.price }}&nbsp;<span class="currency">грн.</span>
+        </div>
+    {% endif %}
+    <div class="price">
+        {{ entity.discountPrice ? entity.discountPrice : entity.price }}&nbsp;<span class="currency">грн.</span>
+    </div>
+    <div class="add-to-cart">
+        <form action="">
+            <button type="submit" class="add-to-cart-button">Купить</button>
+        </form>
+    </div>
+</div>

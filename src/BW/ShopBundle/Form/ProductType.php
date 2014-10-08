@@ -76,6 +76,13 @@ class ProductType extends AbstractType
                     'class' => 'form-control',
                 ),
             ))
+            ->add('discountPrice', 'text', array(
+                'required' => true,
+                'label' => 'Скидочная цена',
+                'attr' => array(
+                    'class' => 'form-control',
+                ),
+            ))
             ->add('heading', 'text', array(
                 'required' => true,
                 'label' => 'Заголовок',

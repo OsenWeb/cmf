@@ -52,6 +52,12 @@ class Product implements SluggableInterface, RouteInterface
     /**
      * @var string
      */
+    private $discountPrice = 0.00;
+
+
+    /**
+     * @var string
+     */
     private $heading = '';
 
     /**
@@ -322,6 +328,29 @@ class Product implements SluggableInterface, RouteInterface
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set discountPrice
+     *
+     * @param string $discountPrice
+     * @return Product
+     */
+    public function setDiscountPrice($discountPrice)
+    {
+        $this->discountPrice = $discountPrice;
+
+        return $this;
+    }
+
+    /**
+     * Get discountPrice
+     *
+     * @return string
+     */
+    public function getDiscountPrice()
+    {
+        return $this->discountPrice;
     }
 
     /**

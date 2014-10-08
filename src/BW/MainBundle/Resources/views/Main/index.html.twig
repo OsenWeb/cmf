@@ -27,6 +27,7 @@
             </div>
         </div>
     </div>
+    {{ service('bw_shop.service.recent_product_widget').show(20)|raw }}
 {% endblock %}
 
 {% block overflow %}

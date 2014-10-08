@@ -23,6 +23,10 @@ BW\ShopBundle\Entity\Product:
             type: decimal
             scale: 2
             precision: 12
+        discountPrice:
+            type: decimal
+            scale: 2
+            precision: 12
         heading:
             type: string
             length: 255
