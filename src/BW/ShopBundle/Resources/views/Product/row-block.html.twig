@@ -60,10 +60,8 @@
     <div class="short_description">
         Краткое описание: {{ entity.shortDescription|raw }}
     </div>
-    
-    <div class="price">
-        {{ entity.price }} <span class="currency">грн.</span>
-    </div>
+
+    {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
     <div class="add-to-cart">
         <form action="">

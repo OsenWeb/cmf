@@ -58,7 +58,7 @@
                     </div>
                     <div class="products-list row level-row">
                         {% for product in pagination %}
-                            {% include 'BWShopBundle:Product:row.html.twig' with {'entity': product} %}
+                            {% include 'BWShopBundle:Product:row-block.html.twig' with {'entity': product} %}
 
                             {% if loop.index % 3 == 0 %}
                                 <div class="clear visible-xs visible-s visible-m"></div>

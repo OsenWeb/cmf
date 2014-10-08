@@ -20,7 +20,7 @@
                 <h1>Все производители</h1>
                 <div class="vendors-list row level-row">
                     {% for entity in entities %}
-                        {% include 'BWShopBundle:Vendor:row.html.twig' %}
+                        {% include 'BWShopBundle:Vendor:row-block.html.twig' %}
 
                         {% if loop.index % 4 == 0 %}
                             <div class="clear visible-xs visible-s visible-m visible-l"></div>

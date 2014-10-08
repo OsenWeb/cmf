@@ -1,0 +1,9 @@
+{% if 0 < entity.discountPrice %}
+    <div class="old-price">
+        {{ entity.price }}&nbsp;<span class="currency">грн.</span>
+    </div>
+{% endif %}
+
+<div class="price">
+    {{ 0 < entity.discountPrice ? entity.discountPrice : entity.price }}&nbsp;<span class="currency">грн.</span>
+</div>

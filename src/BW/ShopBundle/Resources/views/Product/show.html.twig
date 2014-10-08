@@ -71,6 +71,7 @@
                             {% endif %}
                         </div>
                     {% endif %}
+
                     <div class="sku">
                         Артикул: {{ entity.sku }}
                     </div>
@@ -79,9 +80,7 @@
                         Краткое описание: {{ entity.shortDescription|raw }}
                     </div>
 
-                    <div class="price">
-                        Цена: {{ entity.price }} грн.
-                    </div>
+                    {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
                     <div class="add-to-cart">
                         <form action="">
