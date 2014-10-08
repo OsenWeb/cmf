@@ -7,7 +7,7 @@
     <div class="product-name">
         <a href="{{ app.request.uriForPath(entity.route.path) }}">{{ entity.heading }}</a>
     </div>
-    {% if entity.discountPrice %}
+    {% if 0 < entity.discountPrice %}
         <div class="old-price">
             {{ entity.price }}&nbsp;<span class="currency">грн.</span>
         </div>
