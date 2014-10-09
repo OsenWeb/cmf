@@ -73,17 +73,17 @@
 var testSlides = [{
     smallImage: 'images/demo-prod-1.jpg',
     mediumImage: 'images/demo-prod-1.jpg',
-    laggeImage: 'images/demo-prod-1.jpg'
+    largeImage: 'images/demo-prod-1.jpg'
 }, {
     smallImage: 'images/demo-prod-2.jpg',
     mediumImage: 'images/demo-prod-2.jpg',
-    laggeImage: 'images/demo-prod-2.jpg'
+    largeImage: 'images/demo-prod-2.jpg'
 }, {
     smallImage: 'images/demo-prod-3.jpg',
     mediumImage: 'images/demo-prod-3.jpg',
-    laggeImage: 'images/demo-prod-3.jpg'
+    largeImage: 'images/demo-prod-3.jpg'
 }, {
     smallImage: 'images/demo-prod-2.jpg',
     mediumImage: 'images/demo-prod-2.jpg',
-    laggeImage: 'images/demo-prod-2.jpg'
+    largeImage: 'images/demo-prod-2.jpg'
 }];
