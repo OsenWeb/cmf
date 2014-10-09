@@ -32,6 +32,11 @@ class DiscountProductWidgetService
         $this->templating = $templating;
     }
 
+    public function __toString()
+    {
+        return $this->show();
+    }
+
 
     /**
      * @param int $count The max results

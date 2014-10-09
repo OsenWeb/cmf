@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /**
- * Class RecentProductWidgetService
+ * Class FeaturedProductWidgetService
  * @package BW\ShopBundle\Service
  */
-class RecentProductWidgetService
+class FeaturedProductWidgetService
 {
     /**
      * @var EntityManager
@@ -43,7 +43,7 @@ class RecentProductWidgetService
      * @param string $template The template name to override default template
      * @return string The rendered template
      */
-    public function show($count = 5, $template = 'BWShopBundle:RecentProductWidget:horizontal-scroll.html.twig')
+    public function show($count = 5, $template = 'BWShopBundle:FeaturedProductWidget:horizontal-scroll.html.twig')
     {
         $qb = $this->em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
         $qb
@@ -54,7 +54,7 @@ class RecentProductWidgetService
             ->leftJoin('p.productImages', 'pi')
             ->leftJoin('pi.image', 'i')
             ->where('p.published = 1')
-            ->orderBy('p.created', 'DESC')
+            ->andWhere('p.featured = 1')
             ->setMaxResults($count)
         ;
         $entities = $qb->getQuery()->getResult();
