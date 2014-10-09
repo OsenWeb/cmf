@@ -74,6 +74,11 @@ body {
     .root {
         padding: 0 90px;
     }
+
+    .main-menu .submenu-container {
+        padding-left: 110px;
+        padding-right: 110px;
+    }
 }
 
 .wrap {
@@ -347,19 +352,23 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     background: #262626;
 
     font-family: "Open Sans", sans-serif;
-    font-weight: 300;
-    line-height: 2.14em;
-    text-transform: uppercase;
+
+    position: relative;
 }
 
-.main-menu li:first-child {
+.main-menu .menu > ul > li > a {
+    line-height: 2.14em;
+    text-transform: uppercase;
+    padding: 0 1.45em;
+    color: #fff;
+    font-weight: 300;
+}
+
+.main-menu .menu > ul > li:first-child {
     margin-left: -1.45em;
 }
 
 .main-menu a {
-    padding: 0 1.45em;
-    color: #fff;
-
     -webkit-transition-property:  background-color;
     -o-transition-property: background-color;
     transition-property: background-color;
@@ -369,12 +378,53 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     transition-duration: 0.3s;
 }
 
-.main-menu a:hover, .main-menu a:focus, .main-menu li.current > a {
+.main-menu .menu > ul > li:hover > a, .main-menu .menu > ul > li > a:focus, .main-menu .menu > ul > li.current > a {
     background-color: #fff;
     color: #262626;
     -webkit-transition-property: color, background-color;
     -o-transition-property: color, background-color;
     transition-property: color, background-color;
+}
+
+.main-menu .submenu-container {
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    padding: 20px 40px;
+    border-bottom: 2px solid  #262626;
+
+    background-color: #fff;
+
+    visibility: hidden;
+    opacity: 0;
+
+    z-index: 1000;
+}
+
+.main-menu .menu > ul > li:hover .submenu-container {
+    visibility: visible;
+    opacity: 1;
+}
+
+.level-2-container {
+    margin-bottom: 15px;
+}
+
+.level-2-container a {
+    color: #646464;
+}
+
+.level-2-container a:hover {
+    color: #000;
+}
+
+.level-2-container > a {
+    font-weight: 800;
+    font-size: 20px;
+    color: #585858;
 }
 
 .sub-menu {
