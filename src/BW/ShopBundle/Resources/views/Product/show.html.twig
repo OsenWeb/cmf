@@ -30,16 +30,16 @@
             <div class="product-card row level-row">                
                 {% if images %}
                     <div class="col-xs-5-12">
-                        <div class="slider" ng-controller="SliderController as sliderCtrl" data-images="{{ images|serialize }}">
+                        <div class="slider" ng-controller="SliderController as sliderCtrl" ng-init="images = {{ images|serialize }}">
                             <div class="slides">
-                                <img  src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('large_thumb') }}" alt="{{ entity.productImages.first.image.alt }}" title="{{ entity.productImages.first.image.title }}" ng-repeat="slide in sliderCtrl.slides" ng-src="{{'{{ slide.mediumImage }}'}}" ng-show="$index === sliderCtrl.currentSlide" alt="">
+                                <img  src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('large_thumb') }}" alt="{{ entity.productImages.first.image.alt }}" title="{{ entity.productImages.first.image.title }}" ng-repeat="slide in sliderCtrl.slides" ng-src="{{'{{ slide.middleThumbPath }}'}}" ng-show="$index === sliderCtrl.currentSlide" alt="">
 
                                 <div class="slider-back back" ng-click="sliderCtrl.back()"></div>
                                 <div class="slider-forward forward" ng-click="sliderCtrl.forward()"></div>
                             </div>
                             <div class="slide-pager">
                                 <div class="slide-pager-item" ng-class="{'current-slide': sliderCtrl.checkCurrentSlide($index)}" ng-repeat="slide in sliderCtrl.slides">
-                                    <img src="" ng-src="{{'{{ slide.smallImage }}'}}" ng-click="sliderCtrl.setCurrentSlide($index)" alt="">
+                                    <img src="" ng-src="{{'{{ slide.smallThumbPath }}'}}" ng-click="sliderCtrl.setCurrentSlide($index)" alt="">
                                 </div>
                             </div>
                         </div>

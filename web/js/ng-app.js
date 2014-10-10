@@ -13,8 +13,15 @@
         };
     });
 
-    app.controller("SliderController", function() {
-        this.slides = testSlides;
+    app.controller("SliderController", function($scope) {
+
+        this.slides = [];
+
+        $scope.$watch(function() {
+            return $scope.images;
+        }, function(newVal, oldVal, scope) {
+            scope.sliderCtrl.slides = scope.images;
+        });
 
         this.currentSlide = 0;
 
@@ -70,20 +77,3 @@
 })();
 
 
-var testSlides = [{
-    smallImage: 'images/demo-prod-1.jpg',
-    mediumImage: 'images/demo-prod-1.jpg',
-    largeImage: 'images/demo-prod-1.jpg'
-}, {
-    smallImage: 'images/demo-prod-2.jpg',
-    mediumImage: 'images/demo-prod-2.jpg',
-    largeImage: 'images/demo-prod-2.jpg'
-}, {
-    smallImage: 'images/demo-prod-3.jpg',
-    mediumImage: 'images/demo-prod-3.jpg',
-    largeImage: 'images/demo-prod-3.jpg'
-}, {
-    smallImage: 'images/demo-prod-2.jpg',
-    mediumImage: 'images/demo-prod-2.jpg',
-    largeImage: 'images/demo-prod-2.jpg'
-}];
