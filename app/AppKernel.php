@@ -19,6 +19,7 @@ class AppKernel extends Kernel
 
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
 
             new BW\BlogBundle\BWBlogBundle(),
             new BW\MainBundle\BWMainBundle(),
