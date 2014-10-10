@@ -292,10 +292,29 @@ class ProductController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var QueryBuilder $qb */
+        $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
+        $qb
+            ->addSelect('pi')
+            ->addSelect('pii')
+            ->addSelect('c')
+            ->addSelect('cr')
+            ->addSelect('v')
+            ->addSelect('vi')
+            ->leftJoin('p.productImages', 'pi')
+            ->leftJoin('pi.image', 'pii')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('c.route', 'cr')
+            ->leftJoin('p.vendor', 'v')
+            ->leftJoin('v.image', 'vi')
+            ->where('p.id = :id')
+            ->andWhere('p.published = 1')
+            ->setParameter('id', $id)
+        ;
         /** @var Product $entity */
-        $entity = $em->getRepository('BWShopBundle:Product')->find($id);
+        $entity = $qb->getQuery()->getOneOrNullResult();
 
-        if ( ! $entity) {
+        if (! $entity) {
             throw $this->createNotFoundException('Unable to find Product entity.');
         }
 
