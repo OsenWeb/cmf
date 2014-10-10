@@ -615,7 +615,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     line-height: 1.14;
 }
 
-.product-category .product-item {
+.products-list .product-item {
     margin-bottom: 30px;
 }
 
