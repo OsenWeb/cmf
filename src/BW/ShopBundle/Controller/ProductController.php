@@ -6,6 +6,7 @@ use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Utility\FormUtility;
 use BW\ShopBundle\Entity\ProductField;
 use BW\ShopBundle\Entity\Product;
+use BW\ShopBundle\Entity\ProductImage;
 use BW\ShopBundle\Form\ProductType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
@@ -287,20 +288,44 @@ class ProductController extends Controller
     /**
      * Finds and displays a Product entity.
      */
-    public function showAction($id)
+    public function showAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Product $entity */
         $entity = $em->getRepository('BWShopBundle:Product')->find($id);
 
         if ( ! $entity) {
             throw $this->createNotFoundException('Unable to find Product entity.');
         }
 
+        $images = [];
+        /** @var ProductImage $productImage */
+        foreach ($entity->getProductImages() as $productImage) {
+            $image = $productImage->getImage();
+
+            $controller = $this->get('liip_imagine.controller');
+            $cacheManager = $this->container->get('liip_imagine.cache.manager');
+            $controller->filterAction($request, $image->getWebPath(), 'small_thumb');
+            $controller->filterAction($request, $image->getWebPath(), 'middle_thumb');
+            $controller->filterAction($request, $image->getWebPath(), 'large_thumb');
+
+            $images[] = [
+                'id' => $image->getId(),
+                'filename' => $image->getFilename(),
+                'title' => $image->getTitle(),
+                'alt' => $image->getAlt(),
+                'smallThumbPath' => $cacheManager->getBrowserPath($image->getWebPath(), 'small_thumb'),
+                'middleThumbPath' => $cacheManager->getBrowserPath($image->getWebPath(), 'middle_thumb'),
+                'largeThumbPath' => $cacheManager->getBrowserPath($image->getWebPath(), 'large_thumb'),
+            ];
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('BWShopBundle:Product:show.html.twig', array(
             'entity'      => $entity,
+            'images'      => $images,
             'delete_form' => $deleteForm->createView(),
         ));
     }

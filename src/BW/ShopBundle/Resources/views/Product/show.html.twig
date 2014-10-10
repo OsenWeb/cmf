@@ -28,9 +28,9 @@
             <h1>{{ entity.heading }}</h1>
 
             <div class="product-card row level-row">                
-                {% if entity.productImages.count %}
+                {% if images %}
                     <div class="col-xs-5-12">
-                        <div class="slider" ng-controller="SliderController as sliderCtrl">
+                        <div class="slider" ng-controller="SliderController as sliderCtrl" data-images="{{ images|serialize }}">
                             <div class="slides">
                                 <img  src="{{ asset(entity.productImages.first.image.webPath)|imagine_filter('large_thumb') }}" alt="{{ entity.productImages.first.image.alt }}" title="{{ entity.productImages.first.image.title }}" ng-repeat="slide in sliderCtrl.slides" ng-src="{{'{{ slide.mediumImage }}'}}" ng-show="$index === sliderCtrl.currentSlide" alt="">
 
