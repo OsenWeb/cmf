@@ -2,35 +2,23 @@
 
 namespace BW\MainBundle\Controller;
 
-use BW\MainBundle\Controller\BWController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class MainController extends BWController
+class MainController extends Controller
 {
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
 
-    /**
-     * Конструктор MainController
-     * @global \Symfony\Component\HttpFoundation\Request $request
-     * @global \Doctrine\DBAL\Connection $conn
-     */
-    public function __construct() {
-        
-        parent::__construct();
-        
+        $post = $em->getRepository('BWBlogBundle:Post')->findOneBy(array(
+            'home' => TRUE,
+            'published' => TRUE,
+            'lang' => $this->get('bw_localization.lang')->getId(),
+        ));
+
+        return $this->render('BWMainBundle:Main:index.html.twig', array(
+            'post' => $post,
+        ));
     }
-    
-    public function indexAction() {
-        $data = $this->getPropertyOverload();
-        
-        $data->post = $this->getDoctrine()
-                ->getRepository('BWBlogBundle:Post')
-                ->findOneBy(array(
-                    'home' => TRUE,
-                    'published' => TRUE,
-                    'lang' => $this->get('bw_localization.lang')->getId(),
-                ))
-            ;
-        
-        return $this->render('BWMainBundle:Main:index.html.twig', $data->toArray());
-    }
-    
+
 }

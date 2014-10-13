@@ -8,11 +8,10 @@ BW\MenuBundle\Entity\Menu:
             generator:
                 strategy: AUTO
     fields:
-        alias:
+        name:
             type: string
             length: 255
-            unique: true
-        name:
+        alias:
             type: string
             length: 255
         description:
@@ -22,5 +21,5 @@ BW\MenuBundle\Entity\Menu:
         items:
             targetEntity: BW\MenuBundle\Entity\Item
             mappedBy: menu
-    lifecycleCallbacks:
-        prePersist: [setDefaultValues]
+            cascade: [remove]
+    lifecycleCallbacks: {}

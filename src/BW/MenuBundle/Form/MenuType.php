@@ -8,25 +8,35 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MenuType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('name', 'text')
-                ->add('alias', 'text', array(
-                    'required' => FALSE,
-                ))
-                ->add('description', 'textarea', array(
-                    'required' => FALSE,
-                ))
-                // Buttons
-                ->add('save', 'submit')
-                ->add('saveAndClose', 'submit')
-                ->add('delete', 'submit')
-            ;
+            ->add('name', 'text', array(
+                'required' => true,
+                'label' => 'Название ',
+                'attr' => array(
+                    'class' => 'form-control',
+                ),
+            ))
+            ->add('alias', 'text', array(
+                'required' => true,
+                'label' => 'Алиас ',
+                'attr' => array(
+                    'class' => 'form-control',
+                ),
+            ))
+            ->add('description', 'textarea', array(
+                'required' => false,
+                'label' => 'Описание ',
+                'attr' => array(
+                    'class' => 'form-control',
+                ),
+            ))
+        ;
     }
     
     /**
@@ -44,6 +54,6 @@ class MenuType extends AbstractType
      */
     public function getName()
     {
-        return 'menu';
+        return 'bw_menu';
     }
 }

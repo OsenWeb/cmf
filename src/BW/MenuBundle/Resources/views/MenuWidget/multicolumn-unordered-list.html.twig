@@ -1,0 +1,151 @@
+{% macro renderMenu(items, level = 1) %}
+    {% if 2 != level %}
+        <ul class="level-{{ level }}">
+            {% for item in items %}
+                {{ _self.renderMenuItem(item, level) }}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <ul class="level-{{ level }} col-xs-1-4">
+            {% for item in items %}
+                {{ _self.renderMenuItem(item, level) }}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro renderMenuItem(item, level = 1) %}
+    {% if 2 != level %}
+        <li class="item-{{ item.id }} {{ item.class }}">
+            <a href="{% spaceless %}
+                {% if item.route %}
+                    {{ app.request.uriForPath(item.route.path) }}
+                {% else %}
+                    {% if '://' in item.uri %}
+                        {{ item.uri }}
+                    {% else %}
+                        {{ app.request.uriForPath(item.uri) }}
+                    {% endif %}
+                {% endif %}
+            {% endspaceless %}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
+                {{ '- '|repeat(item.level) -}}{{- item.name }}
+            </a>
+            {% if item.children %}
+                {{ _self.renderMenu(item.children, level + 1) }}
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="item-{{ item.id }} level-2-container {{ item.class }}">
+            <a href="{% spaceless %}
+                {% if item.route %}
+                    {{ app.request.uriForPath(item.route.path) }}
+                {% else %}
+                    {% if '://' in item.uri %}
+                        {{ item.uri }}
+                    {% else %}
+                        {{ app.request.uriForPath(item.uri) }}
+                    {% endif %}
+                {% endif %}
+            {% endspaceless %}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
+                {{ '- '|repeat(item.level) -}}{{- item.name }}
+            </a>
+            {% if item.children %}
+                {{ _self.renderMenu(item.children, level + 1) }}
+            {% endif %}
+        </li>
+    {% endif %}
+{% endmacro %}
+
+<div class="menu-{{ menu.id }}" data-id="{{ menu.id }}">
+    {% if tree -%}
+        {% if menu.name -%}
+            <h3>{{ menu.name }}</h3>
+        {%- endif %}
+        {{ _self.renderMenu(tree) }}
+    {%- endif %}
+</div>
+{#
+<ul>
+    <li>
+        <a href="#">Item level-1</a>
+        <div class="submenu-container row">
+            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
+                <div class="level-2-container">
+                    <a href="#">Item level-2</a>
+                    <ul class="level-3">
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                        <li><a href="#">Item level-3</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+#}

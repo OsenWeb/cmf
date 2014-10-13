@@ -2,12 +2,10 @@
 
 namespace BW\MenuBundle\Entity;
 
-use BW\LocalizationBundle\Entity\Lang;
 use BW\RouterBundle\Entity\Route;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\Validator\Constraints as Assert;
-use BW\BlogBundle\Entity\Image;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Item
@@ -16,85 +14,84 @@ use BW\BlogBundle\Entity\Image;
 class Item
 {
     /**
-     * @var integer $id
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string $name
+     * @var string
      */
     private $name = '';
 
     /**
-     * @var string $title
+     * @var string
+     */
+    private $uri = '';
+
+    /**
+     * @var string
      */
     private $title = '';
 
     /**
-     * @var string $href
-     */
-    private $href = '';
-
-    /**
-     * @var string $class
+     * @var string
      */
     private $class = '';
 
     /**
-     * @var boolean $blank
+     * @var boolean
+     */
+    private $published = true;
+
+    /**
+     * @var boolean
      */
     private $blank = false;
 
     /**
-     * @var integer $ordering
-     * @TODO Rename to "order"
+     * @var integer
      */
-    private $ordering = 0;
+    private $order = 0;
 
     /**
-     * @var integer $level
+     * @var integer
+     */
+    private $root = null;
+
+    /**
+     * @var integer
      */
     private $level = 0;
 
     /**
-     * @var integer $left
+     * @var integer
      */
     private $left = 0;
 
     /**
-     * @var integer $right
+     * @var integer
      */
     private $right = 0;
 
     /**
-     * @var Menu $menu
+     * @var \BW\MenuBundle\Entity\Menu
      */
     private $menu;
-    
-    /**
-     * @var Lang $lang
-     */
-    private $lang;
 
     /**
-     * @var Item $parent
+     * @var \BW\MenuBundle\Entity\Item
      */
     private $parent;
 
     /**
-     * @var ArrayCollection $children
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $children;
 
     /**
-     * @var Route $route
+     * @var \BW\RouterBundle\Entity\Route
      */
     private $route;
-
-    /**
-     * @var Image $image
-     */
-    private $image;
 
 
     /**
@@ -105,63 +102,56 @@ class Item
         $this->children = new ArrayCollection();
     }
 
-    
+
+    public function __toString()
+    {
+        return str_repeat('- ', $this->level) . $this->name;
+    }
+
+
     /**
      * Generate current nested level
-     * 
+     *
      * ORM\PrePersist
      * ORM\PreUpdate
      * @return integer
      */
-    public function generateLevel() {
+    public function generateLevel()
+    {
         $this->level = 0;
         $parent = $this->getParent();
-        
+
         while ($parent) {
             $this->level++;
             $parent = $parent->getParent();
         }
-        
+
         return $this;
-    }
-    
-    
-    public function __toString()
-    {
-        return str_repeat('- ', $this->getLevel()). $this->getName();
     }
 
     /**
-     * Set default values
-     * 
-     * ORM\PrePersist
-     * @param LifecycleEventArgs $args
-     * @return Item
+     * Whether URI is internal
+     *
+     * @return bool
      */
-    public function setDefaultValues(LifecycleEventArgs $args) {
-        $values = array(
-            'title' => '',
-            'href' => '',
-            'class' => '',
-        );
-        
-        $item = $args->getEntity();
-        $class = __CLASS__;
-        if ($item instanceof $class) {
-            foreach ($values as $field => $value) {
-                $getter = 'get'. ucfirst($field);
-                if (method_exists($this, $getter)) {
-                    if ($this->$getter() === NULL) {
-                        $setter = 'set'. ucfirst($field);
-                        if (method_exists($this, $setter)) {
-                            $this->$setter($value);
-                        }
-                    }
-                }
-            }
+    public function isInternalUri()
+    {
+        return false === strpos($this->getUri(), '@://@');
+    }
+
+    public function getUriForRequest(Request $request)
+    {
+        if ($this->isInternalUri()) {
+            $path = $this->getRoute()
+                ? $this->getRoute()->getPath()
+                : $this->getUri();
+
+            $uri = $request->getUriForPath($path);
+        } else {
+            $uri = $this->getUri();
         }
-        
-        return $this;
+
+        return $uri;
     }
 
 
@@ -170,7 +160,7 @@ class Item
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -186,18 +176,41 @@ class Item
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set uri
+     *
+     * @param string $uri
+     * @return Item
+     */
+    public function setUri($uri)
+    {
+        $this->uri = isset($uri) ? $uri : '';
+
+        return $this;
+    }
+
+    /**
+     * Get uri
+     *
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
     }
 
     /**
@@ -208,19 +221,72 @@ class Item
      */
     public function setTitle($title)
     {
-        $this->title = $title;
-    
+        $this->title = isset($title) ? $title : '';
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Set class
+     *
+     * @param string $class
+     * @return Item
+     */
+    public function setClass($class)
+    {
+        $this->class = isset($class) ? $class : '';
+
+        return $this;
+    }
+
+    /**
+     * Get class
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param boolean $published
+     * @return Item
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPublished()
+    {
+        return $this->published;
+    }
+
+
+    /**
+     * Get published
+     *
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return $this->published;
     }
 
     /**
@@ -232,18 +298,74 @@ class Item
     public function setBlank($blank)
     {
         $this->blank = $blank;
-    
+
         return $this;
+    }
+
+    /**
+     * Is blank
+     *
+     * @return boolean
+     */
+    public function isBlank()
+    {
+        return $this->blank;
     }
 
     /**
      * Get blank
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getBlank()
     {
         return $this->blank;
+    }
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     * @return Item
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set root
+     *
+     * @param integer $root
+     * @return Item
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+
+        return $this;
+    }
+
+    /**
+     * Get root
+     *
+     * @return integer
+     */
+    public function getRoot()
+    {
+        return $this->root;
     }
 
     /**
@@ -255,189 +377,18 @@ class Item
     public function setLevel($level)
     {
         $this->level = $level;
-    
+
         return $this;
     }
 
     /**
      * Get level
      *
-     * @return integer 
+     * @return integer
      */
     public function getLevel()
     {
         return $this->level;
-    }
-
-    /**
-     * Set ordering
-     *
-     * @param integer $ordering
-     * @return Item
-     */
-    public function setOrdering($ordering)
-    {
-        $this->ordering = $ordering;
-    
-        return $this;
-    }
-
-    /**
-     * Get ordering
-     *
-     * @return integer 
-     */
-    public function getOrdering()
-    {
-        return $this->ordering;
-    }
-
-    /**
-     * Set menu
-     *
-     * @param \BW\MenuBundle\Entity\Menu $menu
-     * @return Item
-     */
-    public function setMenu(Menu $menu = null)
-    {
-        $this->menu = $menu;
-    
-        return $this;
-    }
-
-    /**
-     * Get menu
-     *
-     * @return \BW\MenuBundle\Entity\Menu 
-     */
-    public function getMenu()
-    {
-        return $this->menu;
-    }
-
-    /**
-     * Set parent
-     *
-     * @param \BW\MenuBundle\Entity\Item $parent
-     * @return Item
-     */
-    public function setParent(Item $parent = null)
-    {
-        $this->parent = $parent;
-    
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return \BW\MenuBundle\Entity\Item 
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Add children
-     *
-     * @param \BW\MenuBundle\Entity\Item $children
-     * @return Item
-     */
-    public function addChildren(Item $children = null)
-    {
-        $this->children[] = $children;
-    
-        return $this;
-    }
-
-    /**
-     * Remove children
-     *
-     * @param \BW\MenuBundle\Entity\Item $children
-     */
-    public function removeChildren(Item $children =null)
-    {
-        $this->children->removeElement($children);
-    }
-
-    /**
-     * Get children
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * Set href
-     *
-     * @param string $href
-     * @return Item
-     */
-    public function setHref($href)
-    {
-        $this->href = $href;
-    
-        return $this;
-    }
-
-    /**
-     * Get href
-     *
-     * @return string 
-     */
-    public function getHref()
-    {
-        return $this->href;
-    }
-
-    /**
-     * Set class
-     *
-     * @param string $class
-     * @return Item
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-    
-        return $this;
-    }
-
-    /**
-     * Get class
-     *
-     * @return string 
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * Set lang
-     *
-     * @param \BW\LocalizationBundle\Entity\Lang $lang
-     * @return Item
-     */
-    public function setLang(Lang $lang = null)
-    {
-        $this->lang = $lang;
-    
-        return $this;
-    }
-
-    /**
-     * Get lang
-     *
-     * @return \BW\LocalizationBundle\Entity\Lang 
-     */
-    public function getLang()
-    {
-        return $this->lang;
     }
 
     /**
@@ -449,13 +400,14 @@ class Item
     public function setLeft($left)
     {
         $this->left = $left;
+
         return $this;
     }
 
     /**
      * Get left
      *
-     * @return integer 
+     * @return integer
      */
     public function getLeft()
     {
@@ -471,13 +423,14 @@ class Item
     public function setRight($right)
     {
         $this->right = $right;
+
         return $this;
     }
 
     /**
      * Get right
      *
-     * @return integer 
+     * @return integer
      */
     public function getRight()
     {
@@ -485,21 +438,49 @@ class Item
     }
 
     /**
-     * @param \BW\RouterBundle\Entity\Route $route
-     * @return $this
+     * Set menu
+     *
+     * @param \BW\MenuBundle\Entity\Menu $menu
+     * @return Item
      */
-    public function setRoute(Route $route = null)
+    public function setMenu(Menu $menu = null)
     {
-        $this->route = $route;
+        $this->menu = $menu;
+
         return $this;
     }
 
     /**
-     * @return int
+     * Get menu
+     *
+     * @return \BW\MenuBundle\Entity\Menu
      */
-    public function getRoute()
+    public function getMenu()
     {
-        return $this->route;
+        return $this->menu;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \BW\MenuBundle\Entity\Item $parent
+     * @return Item
+     */
+    public function setParent(Item $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \BW\MenuBundle\Entity\Item
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**
@@ -526,31 +507,39 @@ class Item
     }
 
     /**
-     * Set image
+     * Get children
      *
-     * @param \BW\BlogBundle\Entity\Image $image
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set route
      *
+     * @param \BW\RouterBundle\Entity\Route $route
      * @return Item
      */
-    public function setImage(Image $image = null)
+    public function setRoute(Route $route = null)
     {
-        if (isset($image)) {
-            $file = $image->getFile();
-            if (isset($file)) {
-                $this->image = $image;
-            }
+        $this->route = $route;
+
+        if (isset($this->route)) {
+            $this->uri = ''; // Clear URI when assign route
         }
 
         return $this;
     }
 
     /**
-     * Get image
+     * Get route
      *
-     * @return \BW\BlogBundle\Entity\Image
+     * @return \BW\RouterBundle\Entity\Route
      */
-    public function getImage()
+    public function getRoute()
     {
-        return $this->image;
+        return $this->route;
     }
 }

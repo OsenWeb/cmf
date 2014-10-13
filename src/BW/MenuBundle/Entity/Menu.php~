@@ -2,97 +2,45 @@
 
 namespace BW\MenuBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Menu
- *
- * @ORM\Table(name="menus")
- * @ORM\Entity(repositoryClass="BW\MenuBundle\Entity\MenuRepository")
- * @ORM\HasLifecycleCallbacks
  */
 class Menu
 {
     /**
      * @var integer
-     *
-     * @ORM\Id
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="alias", type="string", length=255, unique=true)
      */
-    private $alias;
+    private $name = '';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    private $alias = '';
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255)
-     */
-    private $description;
-
-    /**
-     * @var string
-     * @ORM\OrderBy({"ordering" = "ASC"})
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="menu")
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $items;
 
-    /**
-     * Set default values
-     * 
-     * @ORM\PrePersist
-     * @param array $values
-     * @return Category
-     */
-    public function setDefaultValues(\Doctrine\ORM\Event\LifecycleEventArgs $args) {
-        $values = array(
-            'alias' => '',
-            'description' => '',
-        );
-        
-        $item = $args->getEntity();
-        $class = __CLASS__;
-        if ($item instanceof $class) {
-            foreach ($values as $field => $value) {
-                $getter = 'get'. ucfirst($field);
-                if (method_exists($this, $getter)) {
-                    if ($this->$getter() === NULL) {
-                        $setter = 'set'. ucfirst($field);
-                        if (method_exists($this, $setter)) {
-                            $this->$setter($value);
-                        }
-                    }
-                }
-            }
-        }
-        
-        return $this;
-    }
-    
-    
 
     /**
-     * Constructor
+     * The constructor
      */
     public function __construct()
     {
         $this->items = new ArrayCollection();
     }
-    
+
+
+    /* SETTERS / GETTERS */
 
     /**
      * Get id
@@ -113,7 +61,7 @@ class Menu
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
@@ -128,26 +76,26 @@ class Menu
     }
 
     /**
-     * Set description
+     * Set alias
      *
-     * @param string $description
+     * @param string $alias
      * @return Menu
      */
-    public function setDescription($description)
+    public function setAlias($alias)
     {
-        $this->description = $description;
-    
+        $this->alias = $alias;
+
         return $this;
     }
 
     /**
-     * Get description
+     * Get alias
      *
      * @return string 
      */
-    public function getDescription()
+    public function getAlias()
     {
-        return $this->description;
+        return $this->alias;
     }
 
     /**
@@ -159,7 +107,7 @@ class Menu
     public function addItem(\BW\MenuBundle\Entity\Item $items)
     {
         $this->items[] = $items;
-    
+
         return $this;
     }
 
@@ -181,28 +129,5 @@ class Menu
     public function getItems()
     {
         return $this->items;
-    }
-
-    /**
-     * Set alias
-     *
-     * @param string $alias
-     * @return Menu
-     */
-    public function setAlias($alias)
-    {
-        $this->alias = $alias;
-    
-        return $this;
-    }
-
-    /**
-     * Get alias
-     *
-     * @return string 
-     */
-    public function getAlias()
-    {
-        return $this->alias;
     }
 }

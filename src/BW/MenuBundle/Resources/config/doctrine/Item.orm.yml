@@ -1,6 +1,10 @@
 BW\MenuBundle\Entity\Item:
     type: entity
-    table: menu_items
+    repositoryClass: Gedmo\Tree\Entity\Repository\NestedTreeRepository
+    table: items
+    gedmo:
+        tree:
+            type: nested
     id:
         id:
             type: integer
@@ -11,47 +15,63 @@ BW\MenuBundle\Entity\Item:
         name:
             type: string
             length: 255
-        title:
+        uri:
             type: string
             length: 255
-        href:
+        title:
             type: string
             length: 255
         class:
             type: string
             length: 255
+        published:
+            type: boolean
         blank:
             type: boolean
-        ordering:
+        order:
+            column: ordering
             type: integer
+        # Nested Set
+        root:
+            type: integer
+            nullable: true
+            gedmo:
+                - treeRoot
         level:
+            column: lvl
             type: integer
+            gedmo:
+                - treeLevel
         left:
             column: lft
             type: integer
+            gedmo:
+                - treeLeft
         right:
             column: rgt
             type: integer
-    oneToOne:
-        image:
-            targetEntity: BW\BlogBundle\Entity\Image
-            cascade: [persist, remove]
+            gedmo:
+                - treeRight
     oneToMany:
         children:
             targetEntity: BW\MenuBundle\Entity\Item
             mappedBy: parent
+            orderBy:
+                left: ASC
+            cascade: [remove]
     manyToOne:
         parent:
             targetEntity: BW\MenuBundle\Entity\Item
             inversedBy: children
+            joinColumn:
+                #name: parent_id
+                #referencedColumnName: id
+                #onDelete: CASCADE
+            gedmo:
+                - treeParent
         menu:
             targetEntity: BW\MenuBundle\Entity\Menu
             inversedBy: items
-        lang:
-            targetEntity: BW\LocalizationBundle\Entity\Lang
         route:
             targetEntity: BW\RouterBundle\Entity\Route
-
-    lifecycleCallbacks:
-        prePersist: [generateLevel, setDefaultValues]
-        preUpdate: [generateLevel]
+    lifecycleCallbacks: {}

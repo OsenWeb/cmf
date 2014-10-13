@@ -3,80 +3,46 @@
 namespace BW\MenuBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Menu
- * @package BW\MenuBundle\Entity
+ * Menu
  */
 class Menu
 {
     /**
-     * @var integer $id
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string $alias
-     */
-    private $alias = '';
-
-    /**
-     * @var string $name
+     * @var string
      */
     private $name = '';
 
     /**
-     * @var string $description
-     * @TODO Rename to "shortDescription"
+     * @var string
+     */
+    private $alias = '';
+
+    /**
+     * @var string
      */
     private $description = '';
 
     /**
-     * @var ArrayCollection $items
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $items;
 
 
     /**
-     * Constructor
+     * The constructor
      */
     public function __construct()
     {
         $this->items = new ArrayCollection();
-    }
-
-
-    /**
-     * Set default values
-     * 
-     * ORM\PrePersist
-     * @param LifecycleEventArgs $args
-     * @return Category
-     */
-    public function setDefaultValues(LifecycleEventArgs $args) {
-        $values = array(
-            'alias' => '',
-            'description' => '',
-        );
-        
-        $item = $args->getEntity();
-        $class = __CLASS__;
-        if ($item instanceof $class) {
-            foreach ($values as $field => $value) {
-                $getter = 'get'. ucfirst($field);
-                if (method_exists($this, $getter)) {
-                    if ($this->$getter() === NULL) {
-                        $setter = 'set'. ucfirst($field);
-                        if (method_exists($this, $setter)) {
-                            $this->$setter($value);
-                        }
-                    }
-                }
-            }
-        }
-        
-        return $this;
+        $this->menuWidgets = new ArrayCollection();
     }
 
 
@@ -90,6 +56,29 @@ class Menu
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Menu
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -108,7 +97,7 @@ class Menu
     /**
      * Get alias
      *
-     * @return string
+     * @return string 
      */
     public function getAlias()
     {
@@ -116,26 +105,13 @@ class Menu
     }
 
     /**
-     * Set name
+     * Get description
      *
-     * @param string $name
-     * @return Menu
+     * @return string
      */
-    public function setName($name)
+    public function getDescription()
     {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
+        return $this->description;
     }
 
     /**
@@ -146,19 +122,9 @@ class Menu
      */
     public function setDescription($description)
     {
-        $this->description = $description;
-    
-        return $this;
-    }
+        $this->description = isset($description) ? $description : '';
 
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return $this;
     }
 
     /**
@@ -170,7 +136,7 @@ class Menu
     public function addItem(Item $items)
     {
         $this->items[] = $items;
-    
+
         return $this;
     }
 
