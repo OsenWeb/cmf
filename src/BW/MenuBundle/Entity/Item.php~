@@ -44,6 +44,11 @@ class Item
     private $published = true;
 
     /**
+     * @var boolean
+     */
+    private $blank = false;
+
+    /**
      * @var integer
      */
     private $order = 0;
@@ -255,14 +260,6 @@ class Item
     }
 
     /**
-     * @return boolean
-     */
-    public function isPublished()
-    {
-        return $this->published;
-    }
-
-    /**
      * @param boolean $published
      * @return Item
      */
@@ -271,6 +268,58 @@ class Item
         $this->published = $published;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPublished()
+    {
+        return $this->published;
+    }
+
+
+    /**
+     * Get published
+     *
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * Set blank
+     *
+     * @param boolean $blank
+     * @return Item
+     */
+    public function setBlank($blank)
+    {
+        $this->blank = $blank;
+
+        return $this;
+    }
+
+    /**
+     * Is blank
+     *
+     * @return boolean
+     */
+    public function isBlank()
+    {
+        return $this->blank;
+    }
+
+    /**
+     * Get blank
+     *
+     * @return boolean
+     */
+    public function getBlank()
+    {
+        return $this->blank;
     }
 
     /**
@@ -492,15 +541,5 @@ class Item
     public function getRoute()
     {
         return $this->route;
-    }
-
-    /**
-     * Get published
-     *
-     * @return boolean
-     */
-    public function getPublished()
-    {
-        return $this->published;
     }
 }

@@ -1,151 +1,77 @@
 {% macro renderMenu(items, level = 1) %}
-    {% if 2 != level %}
-        <ul class="level-{{ level }}">
-            {% for item in items %}
-                {{ _self.renderMenuItem(item, level) }}
-            {% endfor %}
-        </ul>
-    {% else %}
-        <ul class="level-{{ level }} col-xs-1-4">
-            {% for item in items %}
-                {{ _self.renderMenuItem(item, level) }}
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <ul class="level-{{ level }}">
+        {% for item in items %}
+            {{ _self.renderMenuItem(item, level) }}
+        {% endfor %}
+    </ul>
 {% endmacro %}
 
 {% macro renderMenuItem(item, level = 1) %}
-    {% if 2 != level %}
-        <li class="item-{{ item.id }} {{ item.class }}">
-            <a href="{% spaceless %}
-                {% if item.route %}
-                    {{ app.request.uriForPath(item.route.path) }}
-                {% else %}
-                    {% if '://' in item.uri %}
-                        {{ item.uri }}
-                    {% else %}
-                        {{ app.request.uriForPath(item.uri) }}
-                    {% endif %}
-                {% endif %}
-            {% endspaceless %}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
-                {{ '- '|repeat(item.level) -}}{{- item.name }}
-            </a>
-            {% if item.children %}
-                {{ _self.renderMenu(item.children, level + 1) }}
-            {% endif %}
-        </li>
-    {% else %}
-        <li class="item-{{ item.id }} level-2-container {{ item.class }}">
-            <a href="{% spaceless %}
-                {% if item.route %}
-                    {{ app.request.uriForPath(item.route.path) }}
-                {% else %}
-                    {% if '://' in item.uri %}
-                        {{ item.uri }}
-                    {% else %}
-                        {{ app.request.uriForPath(item.uri) }}
-                    {% endif %}
-                {% endif %}
-            {% endspaceless %}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
-                {{ '- '|repeat(item.level) -}}{{- item.name }}
-            </a>
-            {% if item.children %}
-                {{ _self.renderMenu(item.children, level + 1) }}
-            {% endif %}
-        </li>
-    {% endif %}
+    <li class="item-{{ item.id }} {{ item.class }}">
+        <a href="{{ _self.buildItemUri(item) }}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
+            {{- item.name -}}
+        </a>
+        {% if item.children %}
+            {{ _self.renderMenu(item.children, level + 1) }}
+        {% endif %}
+    </li>
 {% endmacro %}
 
-<div class="menu-{{ menu.id }}" data-id="{{ menu.id }}">
-    {% if tree -%}
-        {% if menu.name -%}
-            <h3>{{ menu.name }}</h3>
-        {%- endif %}
-        {{ _self.renderMenu(tree) }}
+{% macro buildItemUri(item) -%}
+    {% spaceless %}
+        {% if item.route %}
+            {{ app.request.uriForPath(item.route.path) }}
+        {% else %}
+            {% if '://' in item.uri %}
+                {{ item.uri }}
+            {% else %}
+                {{ app.request.uriForPath(item.uri) }}
+            {% endif %}
+        {% endif %}
+    {% endspaceless %}
+{%- endmacro %}
+
+<div class="menu menu-{{ menu.id }} horisontal" data-id="{{ menu.id }}">
+    {% if itemTree -%}
+        <ul>
+            {% for item in itemTree %}
+                <li class="item-{{ item.id }} {{ item.class }}">
+                    <a href="{{ _self.buildItemUri(item) }}" data-id="{{ item.id }}" title="{{ item.title }}" {% if item.blank %}target="_blank"{% endif %}>
+                        {{- item.name }}
+                    </a>
+                    {% if item.children %}
+                        <div class="submenu-container row">
+                            {% set prevColumn = 0 %}
+                            {% set maybeNeedToClose = 0 %}
+                            {% set isOpen = 0 %}
+
+                            {% set groupedItems = [] %}
+                            {% for index, childItem in item.children %}
+                                {% if loop.first or ((not isOpen) and item.children[index - 1].column != childItem.column) %}
+                                    <div class="col-xs-1-4">
+                                    {#debug_open_tag{{ loop.index0 }}#}
+                                    {% set isOpen = 1 %}
+                                {% endif %}
+
+                                <div class="level-2-container">
+                                    <a href="{{ _self.buildItemUri(childItem) }}">
+                                        {{- childItem.name -}}
+                                    </a>
+                                    {% if childItem.children %}
+                                        {{ _self.renderMenu(childItem.children) }}
+                                    {% endif %}
+                                </div>
+
+                                {% if loop.last or (isOpen and item.children[index + 1].column != childItem.column) %}
+                                    {#debug_close_tag{{ loop.index0 }}#}
+                                    </div>
+                                    {% set isOpen = 0 %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
     {%- endif %}
 </div>
-{#
-<ul>
-    <li>
-        <a href="#">Item level-1</a>
-        <div class="submenu-container row">
-            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-xs-1-4"> <!-- col-xs-1-{ columnCount } -->
-                <div class="level-2-container">
-                    <a href="#">Item level-2</a>
-                    <ul class="level-3">
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                        <li><a href="#">Item level-3</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </li>
-</ul>
-#}

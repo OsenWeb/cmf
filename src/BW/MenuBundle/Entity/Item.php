@@ -56,6 +56,11 @@ class Item
     /**
      * @var integer
      */
+    private $column = 0;
+
+    /**
+     * @var integer
+     */
     private $root = null;
 
     /**
@@ -343,6 +348,29 @@ class Item
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     * Set column
+     *
+     * @param integer $column
+     * @return Item
+     */
+    public function setColumn($column)
+    {
+        $this->column = $column;
+
+        return $this;
+    }
+
+    /**
+     * Get column
+     *
+     * @return integer
+     */
+    public function getColumn()
+    {
+        return $this->column;
     }
 
     /**

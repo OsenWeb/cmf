@@ -80,11 +80,11 @@ class MenuWidgetService
             ->getQuery();
 
         $repo->setChildrenIndex('children');
-        $tree = $repo->buildTree($query->getArrayResult());
+        $itemTree = $repo->buildTree($query->getArrayResult());
 
         return $this->twig->render($template, [
             'menu' => $menu,
-            'tree' => $tree,
+            'itemTree' => $itemTree,
         ]);
     }
 }

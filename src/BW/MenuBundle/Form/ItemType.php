@@ -101,6 +101,13 @@ class ItemType extends AbstractType
                     'class' => 'form-control',
                 ),
             ))
+            ->add('column', 'number', array(
+                'required' => false,
+                'label' => 'Номер колонки ',
+                'attr' => array(
+                    'class' => 'form-control',
+                ),
+            ))
         ;
     }
     

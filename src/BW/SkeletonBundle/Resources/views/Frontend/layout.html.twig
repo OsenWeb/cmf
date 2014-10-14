@@ -153,8 +153,8 @@
                                 </div>
                             </li>
                         </ul>
-                        {#{ service('bw_menu.widget').getMenu('main_menu', false)|raw }#}
                     </div>
+                    {{ service('bw_menu.service.menu_widget').show('test_menu', 'BWMenuBundle:MenuWidget:multicolumn-unordered-list.html.twig')|raw }}
                 </div>
             </div>
 {% endblock %}

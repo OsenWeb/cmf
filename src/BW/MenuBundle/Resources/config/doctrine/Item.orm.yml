@@ -31,6 +31,9 @@ BW\MenuBundle\Entity\Item:
         order:
             column: ordering
             type: integer
+        column:
+            column: column_number
+            type: integer
         # Nested Set
         root:
             type: integer
