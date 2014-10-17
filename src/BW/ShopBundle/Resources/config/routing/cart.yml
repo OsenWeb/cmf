@@ -1,0 +1,12 @@
+cart:
+    path:     /
+    defaults: { _controller: "BWShopBundle:Cart:index" }
+
+cart_clear:
+    path:     /clear
+    defaults: { _controller: "BWShopBundle:Cart:clear" }
+
+cart_add_item:
+    path:     /add-item
+    defaults: { _controller: "BWShopBundle:Cart:addItem" }
+    methods:  [POST]

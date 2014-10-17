@@ -1,0 +1,21 @@
+BW\ShopBundle\Entity\Order:
+    type: entity
+    table: orders
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        count:
+            type: integer
+        price:
+            type: decimal
+            precision: 12
+            scale: 2
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    lifecycleCallbacks: {  }

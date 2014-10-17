@@ -84,9 +84,7 @@
                     {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
                     <div class="add-to-cart">
-                        <form action="">
-                            <button type="submit" class="add-to-cart-button">Купить</button>
-                        </form>
+                        {{ form(service('bw_shop.service.cart').createForm(entity).createView()) }}
                     </div>
                 </div>
             </div>

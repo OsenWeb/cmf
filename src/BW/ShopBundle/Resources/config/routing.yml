@@ -21,3 +21,7 @@ bw_shop_product_admin:
 bw_shop_product:
     resource: "@BWShopBundle/Resources/config/routing/product.yml"
     prefix:   /{_locale}/products
+
+bw_shop_cart:
+    resource: "@BWShopBundle/Resources/config/routing/cart.yml"
+    prefix:   /{_locale}/cart

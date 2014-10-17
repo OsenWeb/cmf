@@ -5,6 +5,8 @@ parameters:
     bw_shop.service.best_seller_product_widget.class: BW\ShopBundle\Service\BestSellerProductWidgetService
     bw_shop.service.recent_product_widget.class: BW\ShopBundle\Service\RecentProductWidgetService
     bw_shop.service.featured_product_widget.class: BW\ShopBundle\Service\FeaturedProductWidgetService
+    bw_shop.service.cart.class: BW\ShopBundle\Service\CartService
+    bw_shop.service.cart_widget.class: BW\ShopBundle\Service\CartWidgetService
 
 services:
 #    bw_shop.example:
@@ -30,3 +32,11 @@ services:
     bw_shop.service.featured_product_widget:
         class: %bw_shop.service.featured_product_widget.class%
         arguments: ["@doctrine.orm.entity_manager", "@templating"]
+
+    bw_shop.service.cart:
+        class: %bw_shop.service.cart.class%
+        arguments: ["@doctrine.orm.entity_manager", "@form.factory", "@router", "@request_stack"]
+
+    bw_shop.service.cart_widget:
+        class: %bw_shop.service.cart_widget.class%
+        arguments: ["@templating"]

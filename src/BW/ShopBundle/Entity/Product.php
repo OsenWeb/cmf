@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Product
  * @package BW\ShopBundle\Entity
  */
-class Product implements SluggableInterface, RouteInterface
+class Product implements SluggableInterface, RouteInterface, CartItemInterface
 {
     /**
      * @var integer
