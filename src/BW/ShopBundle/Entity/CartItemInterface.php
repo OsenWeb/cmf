@@ -10,4 +10,5 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 interface CartItemInterface
 {
+    public function getId();
 }

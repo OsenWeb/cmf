@@ -49,7 +49,17 @@ class CartController extends Controller
             $data = $form->getData();
 
             $item = new CartItem($data['item']);
-            $cart->addItem($item);
+            if (! $cart->getItems()->exists(function($key, $element) use ($item, $cart) {
+                /** @var CartItem $element */
+                $result = $element->getEntity()->getId() == $item->getEntity()->getId();
+                if (true === $result) {
+                    $element->setQuantity($element->getQuantity() + $item->getQuantity()); // merge quantities
+                }
+                return $result;
+            })) {
+                $cart->addItem($item);
+            }
+
             $cartService->save();
         }
 

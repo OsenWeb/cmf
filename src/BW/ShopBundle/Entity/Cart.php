@@ -57,6 +57,15 @@ class Cart
     }
 
     /**
+     * @param \BW\ShopBundle\Entity\CartItem $item
+     * @return Cart
+     */
+    public function hasItem(CartItem $item)
+    {
+        return $this->items->contains($item);
+    }
+
+    /**
      * @param ArrayCollection $items
      * @return Cart
      */
