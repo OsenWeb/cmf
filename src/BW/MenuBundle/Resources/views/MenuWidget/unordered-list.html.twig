@@ -28,10 +28,10 @@
 {% endmacro %}
 
 <div class="menu-{{ menu.id }}" data-id="{{ menu.id }}">
-    {% if tree -%}
+    {% if itemTree -%}
         {% if menu.name -%}
             <h3>{{ menu.name }}</h3>
         {%- endif %}
-        {{ _self.renderMenu(tree) }}
+        {{ _self.renderMenu(itemTree) }}
     {%- endif %}
 </div>
