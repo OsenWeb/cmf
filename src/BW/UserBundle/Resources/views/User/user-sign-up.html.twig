@@ -3,9 +3,9 @@
 {% block title %}Регистрация на сайте{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="registration page-content root">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
+            <div class="col-xs-1-2 col-l-5-12">
                 <h1>Регистрация</h1>
                 {{ form_start(form) }}
                     {% if form_errors(form) %}
@@ -13,35 +13,31 @@
                             {{ form_errors(form) }}
                         </div>
                     {% endif %}
-
-                    <div>
-                        {{ form_label(form.username, 'Логин: ', {'label_attr': {'class': ''} }) }}
-                        {{ form_widget(form.username, {'attr': {'class': 'form-control'} }) }}
+            
+                    <div class="form-field wide-field">
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Логин'} }) }}
                         {% if form_errors(form.username) %}
                             <div class="alert alert-danger">
                                 {{ form_errors(form.username) }}
                             </div>
                         {% endif %}
                     </div>
-
-                    <div>
-                        {{ form_label(form.email, 'E-mail: ', {'label_attr': {'class': ''} }) }}
-                        {{ form_widget(form.email, {'attr': {'class': 'form-control '} }) }}
+            
+                    <div class="form-field wide-field">
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control ', 'placeholder': 'E-mail'} }) }}
                         {% if form_errors(form.email) %}
                             <div class="alert alert-danger">
                                 {{ form_errors(form.email) }}
                             </div>
                         {% endif %}
                     </div>
-
+            
                     <div>
-                        <div>
-                            {{ form_label(form.password.first, 'Новый пароль: ', {'label_attr': {'class': ''} }) }}
-                            {{ form_widget(form.password.first, {'attr': {'class': 'form-control '} }) }}
+                        <div class="form-field wide-field">
+                            {{ form_widget(form.password.first, {'attr': {'class': 'form-control ', 'placeholder': 'Пароль'} }) }}
                         </div>
-                        <div>
-                            {{ form_label(form.password.second, 'Подтверждение пароля: ', {'label_attr': {'class': ''} }) }}
-                            {{ form_widget(form.password.second, {'attr': {'class': 'form-control '} }) }}
+                        <div class="form-field wide-field">
+                            {{ form_widget(form.password.second, {'attr': {'class': 'form-control ', 'placeholder': 'Подтверждение пароля'} }) }}
                         </div>
                         {% if form_errors(form.password.first) or form_errors(form.password.second) %}
                             <div class="alert alert-danger">
@@ -53,9 +49,9 @@
                 
                     {{ form_widget(form.register, {'attr': {'class': 'btn btn-primary icon-save before-padding'}, 'label': 'Зарегистрироваться'}) }}
                 
-                    <p>
+                    <div class="form-field wide-field">
                         Или <a href="{{ path('user_sign_in') }}">авторизоваться</a> как уже зарегистрированый пользователь.
-                    </p>
+                    </div>
                 
                 {{ form_end(form) }}
             </div>

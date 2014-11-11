@@ -241,6 +241,14 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     color: #262626;
 }
 
+.form-field {
+    margin-bottom: 20px;
+}
+
+.wide-field input[type="text"], .wide-field input[type="email"], .wide-field input[type="password"] {
+    width: 100%;
+}
+
 .localization-widget {
     position: relative;
 }
@@ -1096,10 +1104,6 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     background-color: #fff;
     z-index: 999;
     padding: 20px;
-}
-
-.auth-form .form-field {
-    margin-bottom: 20px;
 }
 
 .forgot-pass {
