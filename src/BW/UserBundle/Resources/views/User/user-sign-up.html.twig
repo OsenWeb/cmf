@@ -48,9 +48,11 @@
                             </div>
                         {% endif %}
                     </div>
-                
-                    {{ form_widget(form.register, {'attr': {'class': 'btn btn-primary icon-save before-padding'}, 'label': 'Зарегистрироваться'}) }}
-                
+                    
+                    <div class="form-field">
+                        {{ form_widget(form.register, {'attr': {'class': 'btn btn-primary icon-save before-padding'}, 'label': 'Зарегистрироваться'}) }}
+                    </div>
+
                     <div class="form-field wide-field">
                         Или <a href="{{ path('user_sign_in') }}">авторизоваться</a> как уже зарегистрированый пользователь.
                     </div>
