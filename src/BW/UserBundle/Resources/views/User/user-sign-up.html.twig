@@ -15,22 +15,24 @@
                     {% endif %}
             
                     <div class="form-field wide-field">
-                        {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Логин'} }) }}
-                        {% if form_errors(form.username) %}
-                            <div class="alert alert-danger">
-                                {{ form_errors(form.username) }}
-                            </div>
-                        {% endif %}
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Логин'} }) }}                        
                     </div>
+
+                    {% if form_errors(form.username) %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(form.username) }}
+                        </div>
+                    {% endif %}
             
                     <div class="form-field wide-field">
-                        {{ form_widget(form.email, {'attr': {'class': 'form-control ', 'placeholder': 'E-mail'} }) }}
-                        {% if form_errors(form.email) %}
-                            <div class="alert alert-danger">
-                                {{ form_errors(form.email) }}
-                            </div>
-                        {% endif %}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control ', 'placeholder': 'E-mail'} }) }}                        
                     </div>
+
+                    {% if form_errors(form.email) %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(form.email) }}
+                        </div>
+                    {% endif %}
             
                     <div>
                         <div class="form-field wide-field">
