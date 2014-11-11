@@ -1124,3 +1124,37 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 .social-auth {
     text-align: center;
 }
+
+.vk-button, .fb-button, .google-button {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+
+    text-indent: -9999px;
+    
+    -webkit-background-size: 100%;
+    background-size: 100%;  
+}
+
+.social-auth a {
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;  
+}
+
+.vk-button {
+    background-image: url(../images/social/vkontakte/logo-48.png);
+}
+
+.fb-button {
+    background-image: url(../images/social/facebook/logo-48.png);
+}
+
+.google-button {
+    background-image: url(../images/social/google/logo-48.png);
+}
+
