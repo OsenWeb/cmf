@@ -1,5 +1,5 @@
 (function() {
-    var app = angular.module("cmf", []);
+    var app = angular.module("cmf", ['ngAnimate']);
 
     app.controller("TabController", function() {
         this.currentTab = 0;
@@ -70,7 +70,7 @@
                 dd.setCurrentDropdown(undefined);
             } else {
                 dd.setCurrentDropdown(this);
-            }
+            };
         };
     }]);
 
