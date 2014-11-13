@@ -519,7 +519,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .carousel-inner {
     width: 9999px;
-    margin: 0 -30px;
+    position: relative;
 }
 
 .carousel-inner:after {
@@ -529,9 +529,13 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 }
 
 .carousel-item {
-    width: 260px;
-    margin: 0 30px;
+    width: 320px;
+    padding: 0 40px;
     float: left;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .back, .forward {
