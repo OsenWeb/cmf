@@ -40,7 +40,7 @@
                                 <div class="slider-forward forward" ng-click="sliderCtrl.forward()"></div>
                             </div>
                             <div class="slide-pager">
-                                <div class="slide-pager-item" ng-class="{'current-slide': sliderCtrl.checkCurrentSlide($index)}" ng-repeat="slide in sliderCtrl.slides">
+                                <div class="slide-pager-item" ng-class="{'current-slide': sliderCtrl.checkCurrentSlide($index)}" ng-repeat="slide in sliderCtrl.slides" ng-show="sliderCtrl.showPagerItem($index)">
                                     <img src="" ng-src="{{'{{ slide.smallThumbPath }}'}}" ng-click="sliderCtrl.setCurrentSlide($index)" alt="">
                                 </div>
                             </div>
