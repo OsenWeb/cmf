@@ -48,7 +48,10 @@ class CartExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('render_add_to_cart_button_for', array($this, 'renderAddToCartButtonFunction'), [
+            new \Twig_SimpleFunction('bw_add_to_cart_button_render_for', array($this, 'addToCartButtonRenderFunction'), [
+                'is_safe' => ['html'],
+            ]),
+            new \Twig_SimpleFunction('bw_cart_render', array($this, 'cartRenderFunction'), [
                 'is_safe' => ['html'],
             ]),
         );
@@ -58,12 +61,19 @@ class CartExtension extends \Twig_Extension
      * @param CartItemInterface $entity
      * @return string
      */
-    public function renderAddToCartButtonFunction(CartItemInterface $entity)
+    public function addToCartButtonRenderFunction(CartItemInterface $entity)
     {
         $form = $this->cart->createForm($entity);
 
-        return $this->twig->render('BWShopBundle:Cart:widget.html.twig', [
+        return $this->twig->render('BWShopBundle:Cart:add-to-cart-button.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    public function cartRenderFunction()
+    {
+        return $this->twig->render('BWShopBundle:Cart:cart.html.twig', [
+            'cart' => $this->cart->getEntity(),
         ]);
     }
 }

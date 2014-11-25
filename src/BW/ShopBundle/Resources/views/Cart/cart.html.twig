@@ -1,0 +1,24 @@
+<h3>Виджет корзины</h3>
+{% if cart and cart.items.count %}
+    <table>
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+        </tr>
+        {% for item in cart.items %}
+            <tr>
+                <td>
+                    {{ item.entity.heading }}<br/>
+                    {{ item.quantity }} по {{ item.entity.price }}&nbsp;грн.
+                </td>
+                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <a href="{{ path('cart_clear') }}">Очистить</a>
+    </div>
+{% else %}
+    <p>Ваша корзина пуста</p>
+    <div>Перейдите в <a href="{{ path('product_list') }}">магазин</a> чтобы добавить товар</div>
+{% endif %}
