@@ -67,28 +67,28 @@ class CartService
      */
     public function createForm(CartItemInterface $item = null)
     {
+        // this assumes that the entity manager was passed in as an option
+        $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
+
         /** @var FormBuilder $builder */
         $builder = $this->formFactory->createBuilder('form', null, [
             'csrf_protection' => false,
-        ])
-            ->setAction($this->router->generate('cart_add_item'))
+        ])->setAction($this->router->generate('cart_add_item'));
+
+        $builder
+            // add a normal text field, but add your transformer to it
+            ->add(
+                $builder->create('item', 'hidden', [
+                    'data_class' => null,
+                    'data' => $item,
+                ])->addModelTransformer($transformer)
+            )
             ->add('add', 'submit', [
                 'label' => 'Добавить в корзину',
                 'attr' => [
                     'class' => 'add-to-cart-button',
                 ],
             ]);
-
-        // this assumes that the entity manager was passed in as an option
-        $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
-
-        // add a normal text field, but add your transformer to it
-        $builder->add(
-            $builder->create('item', 'hidden', [
-                'data_class' => null,
-                'data' => $item,
-            ])->addModelTransformer($transformer)
-        );
 
         return $builder->getForm();
     }
@@ -134,7 +134,7 @@ class CartService
         if ($session->has('cart')) {
             $this->entity = unserialize($session->get('cart'));
 
-            if (! $this->entity instanceof Cart) {
+            if (!$this->entity instanceof Cart) {
                 $this->entity = null;
             }
         }

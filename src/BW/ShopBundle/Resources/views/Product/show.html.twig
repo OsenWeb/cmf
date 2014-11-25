@@ -83,9 +83,7 @@
 
                     {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
-                    <div class="add-to-cart">
-                        {{ form(service('bw_shop.service.cart').createForm(entity).createView()) }}
-                    </div>
+                    {{ render_add_to_cart_button_for(entity) }}
                 </div>
             </div>
 

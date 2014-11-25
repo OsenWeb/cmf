@@ -1,12 +1,5 @@
 parameters:
 #    bw_shop.example.class: BW\ShopBundle\Example
-    bw_shop.service.product_filter.class: BW\ShopBundle\Service\ProductFilterService
-    bw_shop.service.discount_product_widget.class: BW\ShopBundle\Service\DiscountProductWidgetService
-    bw_shop.service.best_seller_product_widget.class: BW\ShopBundle\Service\BestSellerProductWidgetService
-    bw_shop.service.recent_product_widget.class: BW\ShopBundle\Service\RecentProductWidgetService
-    bw_shop.service.featured_product_widget.class: BW\ShopBundle\Service\FeaturedProductWidgetService
-    bw_shop.service.cart.class: BW\ShopBundle\Service\CartService
-    bw_shop.service.cart_widget.class: BW\ShopBundle\Service\CartWidgetService
 
 services:
 #    bw_shop.example:
@@ -14,29 +7,32 @@ services:
 #        arguments: [@service_id, "plain_value", %parameter%]
 
     bw_shop.service.product_filter:
-        class: %bw_shop.service.product_filter.class%
-        arguments: ["@service_container"]
+        class: 'BW\ShopBundle\Service\ProductFilterService'
+        arguments: ['@service_container']
 
     bw_shop.service.discount_product_widget:
-        class: %bw_shop.service.discount_product_widget.class%
-        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+        class: 'BW\ShopBundle\Service\DiscountProductWidgetService'
+        arguments: ['@doctrine.orm.entity_manager', '@templating']
 
     bw_shop.service.best_seller_product_widget:
-        class: %bw_shop.service.best_seller_product_widget.class%
-        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+        class: 'BW\ShopBundle\Service\BestSellerProductWidgetService'
+        arguments: ['@doctrine.orm.entity_manager', '@templating']
 
     bw_shop.service.recent_product_widget:
-        class: %bw_shop.service.recent_product_widget.class%
-        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+        class: 'BW\ShopBundle\Service\RecentProductWidgetService'
+        arguments: ['@doctrine.orm.entity_manager', '@templating']
 
     bw_shop.service.featured_product_widget:
-        class: %bw_shop.service.featured_product_widget.class%
-        arguments: ["@doctrine.orm.entity_manager", "@templating"]
+        class: 'BW\ShopBundle\Service\FeaturedProductWidgetService'
+        arguments: ['@doctrine.orm.entity_manager', '@templating']
 
     bw_shop.service.cart:
-        class: %bw_shop.service.cart.class%
-        arguments: ["@doctrine.orm.entity_manager", "@form.factory", "@router", "@request_stack"]
+        class: 'BW\ShopBundle\Service\CartService'
+        arguments: ['@doctrine.orm.entity_manager', '@form.factory', '@router', '@request_stack']
 
-    bw_shop.service.cart_widget:
-        class: %bw_shop.service.cart_widget.class%
-        arguments: ["@templating"]
+    bw_shop.twig.cart:
+        public: false
+        class: BW\ShopBundle\Twig\CartExtension
+        arguments: ['@bw_shop.service.cart']
+        tags:
+            - { name: twig.extension }

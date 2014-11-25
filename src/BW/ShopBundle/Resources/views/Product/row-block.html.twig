@@ -1,5 +1,4 @@
 <div class="product-item col-xs-1-3 col-l-1-4 col-xl-1-5">
-    
     {% if entity.productImages.count %}
         {#<a href="{{ path('product_show_by_slug', {'slug': entity.slug}) }}">#}
         <a href="{{ app.request.uriForPath(entity.route.path) }}" class="product-preview">
@@ -63,9 +62,5 @@
 
     {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
-    <div class="add-to-cart">
-        <form action="">
-            <button type="submit" class="add-to-cart-button">Купить</button>
-        </form>
-    </div>
+    {{ render_add_to_cart_button_for(entity) }}
 </div>

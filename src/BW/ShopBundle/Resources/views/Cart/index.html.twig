@@ -40,13 +40,13 @@
                             </tr>
                         {% endfor %}
                     </table>
+                    <div>
+                        <a href="{{ path('cart_clear') }}">Очистить корзину</a>
+                    </div>
                 {% else %}
                     <h2>Ваша корзина пуста</h2>
                     <div>Вернитесь в <a href="{{ path('product_list') }}">магазин</a> чтобы добавить товар</div>
                 {% endif %}
-                <div>
-                    <a href="{{ path('cart_clear') }}">Очистить корзину</a>
-                </div>
             </div>
         </div>
     </div>
