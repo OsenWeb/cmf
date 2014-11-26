@@ -3,6 +3,7 @@
 namespace BW\ShopBundle\Service;
 
 use BW\ShopBundle\Entity\Cart;
+use BW\ShopBundle\Entity\CartItem;
 use BW\ShopBundle\Entity\CartItemInterface;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
 use Doctrine\ORM\EntityManager;

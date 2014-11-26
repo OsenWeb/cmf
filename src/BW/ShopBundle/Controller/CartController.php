@@ -47,19 +47,8 @@ class CartController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
-
-            $item = new CartItem($data['item']);
-            if (! $cart->getItems()->exists(function($key, $element) use ($item, $cart) {
-                /** @var CartItem $element */
-                $result = $element->getEntity()->getId() == $item->getEntity()->getId();
-                if (true === $result) {
-                    $element->setQuantity($element->getQuantity() + $item->getQuantity()); // merge quantities
-                }
-                return $result;
-            })) {
-                $cart->addItem($item);
-            }
-
+            $newCartItem = new CartItem($data['item']);
+            $cart->addItem($newCartItem);
             $cartService->save();
         }
 

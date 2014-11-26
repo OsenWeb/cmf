@@ -31,14 +31,24 @@ class Cart
     }
 
     /**
-     * Add items
+     * Add item to cart
      *
-     * @param \BW\ShopBundle\Entity\CartItem $item
+     * @param \BW\ShopBundle\Entity\CartItem $newItem
      * @return Cart
      */
-    public function addItem(CartItem $item)
+    public function addItem(CartItem $newItem)
     {
-        $this->items[] = $item;
+        if (! $this->getItems()->exists(function($key, $value) use ($newItem) {
+            /** @var CartItem $value */
+            $result = $value->getEntity()->getId() === $newItem->getEntity()->getId();
+            if (true === $result) {
+                $value->setQuantity($value->getQuantity() + $newItem->getQuantity()); // merge quantities
+            }
+
+            return $result;
+        })) {
+            $this->items[] = $newItem;
+        }
 
         return $this;
     }
