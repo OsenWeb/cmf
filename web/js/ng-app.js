@@ -1,5 +1,5 @@
 (function() {
-    var app = angular.module("cmf", []);
+    var app = angular.module("cmf", ['ngAnimate']);
 
     app.controller("TabController", function() {
         this.currentTab = 0;
@@ -48,6 +48,10 @@
                 this.currentSlide = 0;
             };
         };
+
+        this.showPagerItem = function(index) {
+            return (index >= this.currentSlide && index < (this.currentSlide + 4)) || (index >= this.slides.length - 4) && (this.currentSlide > this.slides.length - 4);
+        };
     });
 
     app.factory('dd', function() {
@@ -70,7 +74,7 @@
                 dd.setCurrentDropdown(undefined);
             } else {
                 dd.setCurrentDropdown(this);
-            }
+            };
         };
     }]);
 

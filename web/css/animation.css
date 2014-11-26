@@ -1,0 +1,16 @@
+.animation-fade.ng-hide-add,
+.animation-fade.ng-hide-remove {
+    -webkit-transition: opacity linear 0.3s;
+    -moz-transition: opacity linear 0.3s;
+    -o-transition: opacity linear 0.3s;
+    transition: opacity linear 0.3s;
+    display: block!important;
+}
+.animation-fade.ng-hide-add.ng-hide-add-active,
+.animation-fade.ng-hide-remove {
+    opacity: 0;
+}
+.animation-fade.ng-hide-add,
+.animation-fade.ng-hide-remove.ng-hide-remove-active {
+    opacity: 1;
+}

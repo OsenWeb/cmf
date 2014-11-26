@@ -241,6 +241,14 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     color: #262626;
 }
 
+.form-field {
+    margin-bottom: 20px;
+}
+
+.wide-field input[type="text"], .wide-field input[type="email"], .wide-field input[type="password"] {
+    width: 100%;
+}
+
 .localization-widget {
     position: relative;
 }
@@ -511,7 +519,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .carousel-inner {
     width: 9999px;
-    margin: 0 -30px;
+    position: relative;
 }
 
 .carousel-inner:after {
@@ -521,9 +529,13 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 }
 
 .carousel-item {
-    width: 260px;
-    margin: 0 30px;
+    width: 320px;
+    padding: 0 40px;
     float: left;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .back, .forward {
@@ -551,6 +563,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .carousel-back, .slider-back {
     right: 30px;
+    z-index: 2;
 }
 
 .forward {
@@ -559,6 +572,7 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .carousel-forward, .slider-forward {
     right: 0;
+    z-index: 2;
 }
 
 .slider, .carousel {
@@ -577,6 +591,17 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 .slides > img {
     width: 100%;
     height: auto;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.slides > img.ghost-slide {
+    position: relative;
+    opacity: 0;
+    z-index: 0;
 }
 
 .slide-pager {
@@ -601,6 +626,8 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 
 .slide-pager-item > img {
     border: 1px solid  #e7e7e7;
+
+    cursor: pointer;
 }
 
 .slide-pager-item.current-slide > img {
@@ -1098,10 +1125,6 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
     padding: 20px;
 }
 
-.auth-form .form-field {
-    margin-bottom: 20px;
-}
-
 .forgot-pass {
     font-size: 12px;
     line-height: 1;
@@ -1120,3 +1143,37 @@ button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:ho
 .social-auth {
     text-align: center;
 }
+
+.vk-button, .fb-button, .google-button {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+
+    text-indent: -9999px;
+    
+    -webkit-background-size: 100%;
+    background-size: 100%;  
+}
+
+.social-auth a {
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;  
+}
+
+.vk-button {
+    background-image: url(../images/social/vkontakte/logo-48.png);
+}
+
+.fb-button {
+    background-image: url(../images/social/facebook/logo-48.png);
+}
+
+.google-button {
+    background-image: url(../images/social/google/logo-48.png);
+}
+

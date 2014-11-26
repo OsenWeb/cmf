@@ -3,26 +3,26 @@
 {% block title %}Авториация на сайте{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="sign-in-page page-content root">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-                <h1><i class="fa fa-sign-in"></i> Авторизация</h1>
+            <div class="col-xs-1-2 col-l-5-12">
+                <h1>Авторизация</h1>
                 {% if error %}
                     <div class="alert alert-danger">{{ error.message }}</div>
                 {% endif %}
 
                 <form action="{{ path('user_sign_in_check') }}" method="post">
-                    {# Авторизация через соц.сети #}
-                    {% include 'BWUserBundle:User/social:sign-in.html.twig' %}
-                    <p>
-                        <label for="username">Логин:</label><br>
-                        <input type="text" id="username" name="_username" value="{{ last_username }}" />
-                    </p>
+                    <div class="form-field wide-field">
+                        {# Авторизация через соц.сети #}
+                        {% include 'BWUserBundle:User/social:sign-in.html.twig' %}
+                    </div>
+                    <div class="form-field wide-field">
+                        <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="Логин" />
+                    </div>
 
-                    <p>
-                        <label for="password">Пароль:</label><br>
-                        <input type="password" id="password" name="_password" />
-                    </p>
+                    <div class="form-field wide-field">
+                        <input type="password" id="password" name="_password" placeholder="Пароль" />
+                    </div>
 
                     {#
                         If you want to control the URL the user
@@ -30,15 +30,15 @@
                         <input type="hidden" name="_target_path" value="/account" />
                     #}
 
-                    <p>
+                    <div class="form-field">
                         <button class="btn btn-default" type="submit">Авторизироваться</button>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <a href="{{ path('user_password_reset') }}">Забыли пароль?</a>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <a href="{{ path('user_sign_up') }}">Зарегистрироваться</a> как новый пользователь.
-                    </p>
+                    </div>
                 </form>
             </div>
         </div>

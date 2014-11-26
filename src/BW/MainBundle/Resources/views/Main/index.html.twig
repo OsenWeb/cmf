@@ -27,9 +27,16 @@
             </div>
         </div>
     </div>
+
+    <div class="new-products home-block root">
+        <div class="col-xs-1-1">
+            {{ service('bw_shop.service.recent_product_widget').show(20)|raw }}
+        </div>
+    </div>
 {% endblock %}
 
 {% block overflow %}
     {{ parent() }}
     <script src="{{ asset('libs/jquery/js/jquery.cycle2.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('libs/jquery/js/jquery.jcarousel-core.min.js') }}" type="text/javascript"></script>
 {% endblock %}
