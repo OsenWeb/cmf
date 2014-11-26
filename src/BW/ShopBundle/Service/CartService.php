@@ -66,7 +66,7 @@ class CartService
      * @param CartItemInterface $item
      * @return Form
      */
-    public function createForm(CartItemInterface $item = null)
+    public function createAddToCartForm(CartItemInterface $item = null)
     {
         // this assumes that the entity manager was passed in as an option
         $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
@@ -88,6 +88,38 @@ class CartService
                 'label' => 'Добавить в корзину',
                 'attr' => [
                     'class' => 'add-to-cart-button',
+                ],
+            ]);
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @param CartItem $cartItem
+     * @return Form
+     */
+    public function createRemoveFromCartForm(CartItem $cartItem = null)
+    {
+        // this assumes that the entity manager was passed in as an option
+        $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
+
+        /** @var FormBuilder $builder */
+        $builder = $this->formFactory->createBuilder('form', null, [
+            'csrf_protection' => false,
+        ])->setAction($this->router->generate('cart_remove_item'));
+
+        $builder
+            // add a normal text field, but add your transformer to it
+//            ->add(
+//                $builder->create('item', 'hidden', [
+//                    'data_class' => null,
+//                    'data' => $cartItem,
+//                ])->addModelTransformer($transformer)
+//            )
+            ->add('add', 'submit', [
+                'label' => 'Удалить из корзины',
+                'attr' => [
+                    'class' => 'remove-from-cart-button',
                 ],
             ]);
 

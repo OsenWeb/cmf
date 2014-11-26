@@ -54,7 +54,7 @@ class Cart
     }
 
     /**
-     * Remove items
+     * Remove item from cart
      *
      * @param \BW\ShopBundle\Entity\CartItem $item
      * @return Cart

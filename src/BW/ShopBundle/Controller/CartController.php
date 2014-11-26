@@ -43,7 +43,29 @@ class CartController extends Controller
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getEntity();
 
-        $form = $cartService->createForm();
+        $form = $cartService->createAddToCartForm();
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $newCartItem = new CartItem($data['item']);
+            $cart->addItem($newCartItem);
+            $cartService->save();
+        }
+
+        return $this->redirect($this->generateUrl('cart'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeItemAction(Request $request)
+    {
+        die('removeItemAction');
+        $cartService = $this->get('bw_shop.service.cart');
+        $cart = $cartService->getEntity();
+
+        $form = $cartService->createRemoveFromCartForm();
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();

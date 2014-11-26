@@ -10,3 +10,8 @@ cart_add_item:
     path:     /add-item
     defaults: { _controller: "BWShopBundle:Cart:addItem" }
     methods:  [POST]
+
+cart_remove_item:
+    path:     /remove-item
+    defaults: { _controller: "BWShopBundle:Cart:removeItem" }
+    methods:  [POST]
