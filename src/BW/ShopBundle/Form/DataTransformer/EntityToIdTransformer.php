@@ -40,6 +40,10 @@ class EntityToIdTransformer implements DataTransformerInterface
             return null;
         }
 
+        if (! $entity instanceof EntityToIdTransformerInterface) {
+            throw new TransformationFailedException;
+        }
+
         return $entity->getId();
     }
 
@@ -66,6 +70,10 @@ class EntityToIdTransformer implements DataTransformerInterface
                 $this->er->getClassName(),
                 $id
             ));
+        }
+
+        if (! $entity instanceof EntityToIdTransformerInterface) {
+            throw new TransformationFailedException;
         }
 
         return $entity;

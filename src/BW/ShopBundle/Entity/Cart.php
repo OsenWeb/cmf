@@ -15,6 +15,9 @@ class Cart
      */
     private $items;
 
+    /**
+     * The constructor
+     */
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -34,7 +37,7 @@ class Cart
      */
     public function setItems(ArrayCollection $items)
     {
-        // @TODO Maybe check each element for CartItem type
+        // @TODO Maybe check each element for AbstractPurchasableProduct type
         $this->items = $items;
 
         return $this;
@@ -43,45 +46,23 @@ class Cart
     /**
      * Add item to cart
      *
-     * @param \BW\ShopBundle\Entity\CartItem $newItem
-     * @return Cart
+     * @param AbstractPurchasableProduct $item
+     * @return $this
      */
-    public function addItem(CartItem $newItem)
+    public function addItem(AbstractPurchasableProduct $item)
     {
-        if (! $this->getItems()->exists(function($key, $value) use ($newItem) {
-            /** @var CartItem $value */
-            $result = $value->getEntity()->getId() === $newItem->getEntity()->getId();
+        if (! $this->getItems()->exists(function ($key, $value) use ($item) {
+            /** @var AbstractPurchasableProduct $value */
+            $result = $value->getId() === $item->getId();
             if (true === $result) {
-                $value->setQuantity($value->getQuantity() + $newItem->getQuantity()); // merge quantities
+                $value->setQuantityInCart($value->getQuantityInCart() + $item->getQuantityInCart()); // merge quantities
             }
 
             return $result;
         })) {
-            $this->items->add($newItem);
+            $this->items->add($item);
         }
 
         return $this;
-    }
-
-    /**
-     * Remove item from cart
-     *
-     * @param \BW\ShopBundle\Entity\CartItem $item
-     * @return Cart
-     */
-    public function removeItem(CartItem $item)
-    {
-        $this->items->removeElement($item);
-
-        return $this;
-    }
-
-    /**
-     * @param \BW\ShopBundle\Entity\CartItem $item
-     * @return Cart
-     */
-    public function hasItem(CartItem $item)
-    {
-        return $this->items->contains($item);
     }
 }

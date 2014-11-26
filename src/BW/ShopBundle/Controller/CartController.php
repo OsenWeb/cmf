@@ -2,7 +2,9 @@
 
 namespace BW\ShopBundle\Controller;
 
+use BW\ShopBundle\Entity\AbstractPurchasableProduct;
 use BW\ShopBundle\Entity\CartItem;
+use BW\ShopBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,8 +49,14 @@ class CartController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
-            $newCartItem = new CartItem($data['item']);
-            $cart->addItem($newCartItem);
+            /** @var Product $item */
+            $item = $data['item'];
+            // Set entity price for display in cart
+            $price = 0.00 < $item->getDiscountPrice() ? $item->getDiscountPrice() : $item->getPrice();
+            $item->setPriceInCart($price);
+            // Set entity quantity in cart
+            $item->setQuantityInCart(1);
+            $cart->addItem($item);
             $cartService->save();
         }
 
@@ -61,7 +69,6 @@ class CartController extends Controller
      */
     public function removeItemAction(Request $request)
     {
-        die('removeItemAction');
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getCart();
 
@@ -69,8 +76,7 @@ class CartController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
-            $newCartItem = new CartItem($data['item']);
-            $cart->addItem($newCartItem);
+            $cart->getItems()->remove($data['item_key']);
             $cartService->save();
         }
 

@@ -8,10 +8,10 @@
         {% for item in cart.items %}
             <tr>
                 <td>
-                    {{ item.entity.heading }}<br/>
-                    {{ item.quantity }} по {{ item.entity.price }}&nbsp;грн.
+                    {{ item.heading }}<br/>
+                    {{ item.quantityInCart }} по {{ item.priceInCart }}&nbsp;грн.
                 </td>
-                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
+                <td>{{ item.calculateTotalPriceInCart }}&nbsp;грн.</td>
             </tr>
         {% endfor %}
     </table>

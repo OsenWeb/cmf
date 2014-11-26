@@ -25,19 +25,19 @@
                             <th>Название</th>
                             <th>Количество</th>
                             <th>Цена</th>
-                            <th>Действия</th>
+                            <th></th>
                         </tr>
                         {% for item in cart.items %}
                             <tr>
                                 <td>{{ loop.index }}</td>
                                 <td>
-                                    {{ item.entity.heading }}<br/>
-                                    {{ item.entity.price }}&nbsp;грн.
+                                    {{ item.heading }}<br/>
+                                    {{ item.priceInCart }}&nbsp;грн.
                                 </td>
                                 <td>
-                                    <input type="number" min="1" max="99" value="{{ item.quantity }}" />
+                                    <input type="number" min="1" max="99" value="{{ item.quantityInCart }}" />
                                 </td>
-                                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
+                                <td>{{ item.calculateTotalPriceInCart }}&nbsp;грн.</td>
                                 <td>{{ bw_remove_from_cart_form_render(item) }}</td>
                             </tr>
                         {% endfor %}

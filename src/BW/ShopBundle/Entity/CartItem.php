@@ -17,12 +17,12 @@ class CartItem
 
     private $price = 0.00;
 
-
     /**
      * @param CartItemInterface $entity
      */
     public function __construct(CartItemInterface $entity = null)
     {
+        die('CartItem::__construct');
         if (null !== $entity) {
             $this->setEntity($entity);
         }

@@ -2,9 +2,8 @@
 
 namespace BW\ShopBundle\Service;
 
+use BW\ShopBundle\Entity\AbstractPurchasableProduct;
 use BW\ShopBundle\Entity\Cart;
-use BW\ShopBundle\Entity\CartItem;
-use BW\ShopBundle\Entity\CartItemInterface;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -63,10 +62,10 @@ class CartService
 
 
     /**
-     * @param CartItemInterface $item
+     * @param AbstractPurchasableProduct $entity
      * @return Form
      */
-    public function createAddToCartForm(CartItemInterface $item = null)
+    public function createAddToCartForm(AbstractPurchasableProduct $entity = null)
     {
         // this assumes that the entity manager was passed in as an option
         $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
@@ -81,7 +80,7 @@ class CartService
             ->add(
                 $builder->create('item', 'hidden', [
                     'data_class' => null,
-                    'data' => $item,
+                    'data' => $entity,
                 ])->addModelTransformer($transformer)
             )
             ->add('add', 'submit', [
@@ -95,11 +94,12 @@ class CartService
     }
 
     /**
-     * @param CartItem $cartItem
+     * @param int $key
      * @return Form
      */
-    public function createRemoveFromCartForm(CartItem $cartItem = null)
+    public function createRemoveFromCartForm($key = null)
     {
+        $key = (int)$key;
         // this assumes that the entity manager was passed in as an option
         $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
 
@@ -109,13 +109,11 @@ class CartService
         ])->setAction($this->router->generate('cart_remove_item'));
 
         $builder
-            // add a normal text field, but add your transformer to it
-//            ->add(
-//                $builder->create('item', 'hidden', [
-//                    'data_class' => null,
-//                    'data' => $cartItem,
-//                ])->addModelTransformer($transformer)
-//            )
+            // Key of value (AbstractPurchasableProduct entity) in ArrayCollection
+            ->add('item_key', 'hidden', [
+                'data_class' => null,
+                'data' => $key,
+            ])
             ->add('add', 'submit', [
                 'label' => 'Удалить из корзины',
                 'attr' => [

@@ -5,6 +5,7 @@ namespace BW\ShopBundle\Entity;
 use BW\MainBundle\Service\SluggableInterface;
 use BW\RouterBundle\Entity\Route;
 use BW\RouterBundle\Entity\RouteInterface;
+use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Product
  * @package BW\ShopBundle\Entity
  */
-class Product implements SluggableInterface, RouteInterface, CartItemInterface
+class Product extends AbstractPurchasableProduct implements SluggableInterface, RouteInterface
 {
     /**
      * @var integer
@@ -53,7 +54,6 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
      * @var string
      */
     private $discountPrice = 0.00;
-
 
     /**
      * @var string
@@ -120,7 +120,9 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
      */
     private $productFields;
 
-
+    /**
+     * The constructor
+     */
     public function __construct()
     {
         $this->created = new \DateTime();
@@ -128,7 +130,6 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
         $this->productImages = new ArrayCollection();
         $this->productFields = new ArrayCollection();
     }
-
 
     public function generatePath()
     {
@@ -158,7 +159,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
 
     public function getDefaults()
     {
-        if ( ! $this->getId()) {
+        if (! $this->getId()) {
             throw new \RuntimeException(''
                 . 'The entity ID not defined. '
                 . 'Maybe you forgot to execute "flush" method before handle the entity?'
@@ -181,7 +182,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -369,7 +370,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get heading
      *
-     * @return string 
+     * @return string
      */
     public function getHeading()
     {
@@ -550,7 +551,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get category
      *
-     * @return \BW\ShopBundle\Entity\Category 
+     * @return \BW\ShopBundle\Entity\Category
      */
     public function getCategory()
     {
@@ -573,7 +574,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get route
      *
-     * @return \BW\RouterBundle\Entity\Route 
+     * @return \BW\RouterBundle\Entity\Route
      */
     public function getRoute()
     {
@@ -596,7 +597,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -619,7 +620,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -654,7 +655,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get productImages
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProductImages()
     {
@@ -687,7 +688,7 @@ class Product implements SluggableInterface, RouteInterface, CartItemInterface
     /**
      * Get productFields
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getProductFields()
     {
