@@ -17,7 +17,7 @@ class CartController extends Controller
      */
     public function indexAction()
     {
-        $cart = $this->get('bw_shop.service.cart')->getEntity();
+        $cart = $this->get('bw_shop.service.cart')->getCart();
 
         return $this->render('BWShopBundle:Cart:index.html.twig', [
             'cart' => $cart,
@@ -41,7 +41,7 @@ class CartController extends Controller
     public function addItemAction(Request $request)
     {
         $cartService = $this->get('bw_shop.service.cart');
-        $cart = $cartService->getEntity();
+        $cart = $cartService->getCart();
 
         $form = $cartService->createAddToCartForm();
         $form->handleRequest($request);
@@ -63,7 +63,7 @@ class CartController extends Controller
     {
         die('removeItemAction');
         $cartService = $this->get('bw_shop.service.cart');
-        $cart = $cartService->getEntity();
+        $cart = $cartService->getCart();
 
         $form = $cartService->createRemoveFromCartForm();
         $form->handleRequest($request);

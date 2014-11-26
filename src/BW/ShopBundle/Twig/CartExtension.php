@@ -17,14 +17,14 @@ class CartExtension extends \Twig_Extension
     /**
      * @var CartService
      */
-    private $cart;
+    private $cartService;
 
     /**
-     * @param CartService $cart
+     * @param CartService $cartService
      */
-    public function __construct(CartService $cart)
+    public function __construct(CartService $cartService)
     {
-        $this->cart = $cart;
+        $this->cartService = $cartService;
     }
 
     /**
@@ -64,7 +64,7 @@ class CartExtension extends \Twig_Extension
     public function cartRenderFunction()
     {
         return $this->twig->render('BWShopBundle:Cart:cart.html.twig', [
-            'cart' => $this->cart->getEntity(),
+            'cart' => $this->cartService->getCart(),
         ]);
     }
 
@@ -74,7 +74,7 @@ class CartExtension extends \Twig_Extension
      */
     public function addToCartFormRenderFunction(CartItemInterface $entity)
     {
-        $form = $this->cart->createAddToCartForm($entity);
+        $form = $this->cartService->createAddToCartForm($entity);
 
         return $this->twig->render('BWShopBundle:Cart:add-to-cart-form.html.twig', [
             'form' => $form->createView(),
@@ -87,7 +87,7 @@ class CartExtension extends \Twig_Extension
      */
     public function removeFromCartFormRenderFunction(CartItem $cartItem)
     {
-        $form = $this->cart->createRemoveFromCartForm($cartItem);
+        $form = $this->cartService->createRemoveFromCartForm($cartItem);
 
         return $this->twig->render('BWShopBundle:Cart:remove-from-cart-form.html.twig', [
             'form' => $form->createView(),

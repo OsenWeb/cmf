@@ -15,12 +15,10 @@ class Cart
      */
     private $items;
 
-
     public function __construct()
     {
         $this->items = new ArrayCollection();
     }
-
 
     /**
      * @return ArrayCollection
@@ -28,6 +26,18 @@ class Cart
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * @param ArrayCollection $items
+     * @return Cart
+     */
+    public function setItems(ArrayCollection $items)
+    {
+        // @TODO Maybe check each element for CartItem type
+        $this->items = $items;
+
+        return $this;
     }
 
     /**
@@ -47,7 +57,7 @@ class Cart
 
             return $result;
         })) {
-            $this->items[] = $newItem;
+            $this->items->add($newItem);
         }
 
         return $this;
@@ -73,17 +83,5 @@ class Cart
     public function hasItem(CartItem $item)
     {
         return $this->items->contains($item);
-    }
-
-    /**
-     * @param ArrayCollection $items
-     * @return Cart
-     */
-    public function setItems(ArrayCollection $items)
-    {
-        // @TODO Maybe check each element for CartItem type
-        $this->items = $items;
-
-        return $this;
     }
 }

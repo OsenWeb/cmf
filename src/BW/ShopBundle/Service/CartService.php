@@ -22,7 +22,7 @@ class CartService
     /**
      * @var Cart
      */
-    private $entity;
+    private $cart;
 
     /**
      * @var EntityManager
@@ -129,9 +129,9 @@ class CartService
     /**
      * @return Cart
      */
-    public function getEntity()
+    public function getCart()
     {
-        return $this->entity;
+        return $this->cart;
     }
 
     /**
@@ -139,41 +139,7 @@ class CartService
      */
     public function initEmpty()
     {
-        $this->entity = new Cart;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function save()
-    {
-        $session = $this->requestStack->getCurrentRequest()->getSession();
-
-        $session->set('cart', serialize($this->entity));
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function restore()
-    {
-        $session = $this->requestStack->getCurrentRequest()->getSession();
-
-        $this->entity = null;
-        if ($session->has('cart')) {
-            $this->entity = unserialize($session->get('cart'));
-
-            if (!$this->entity instanceof Cart) {
-                $this->entity = null;
-            }
-        }
-        if (null === $this->entity) {
-            $this->initEmpty();
-        }
+        $this->cart = new Cart;
 
         return $this;
     }
@@ -185,8 +151,45 @@ class CartService
     {
         $session = $this->requestStack->getCurrentRequest()->getSession();
 
-        $session->remove('cart');
         $this->initEmpty();
+        $session->remove('cart');
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function save()
+    {
+        $session = $this->requestStack->getCurrentRequest()->getSession();
+
+        $session->set('cart', serialize($this->cart));
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function restore()
+    {
+        $session = $this->requestStack->getCurrentRequest()->getSession();
+
+        $this->cart = null;
+        // Try to restore cart from session
+        if ($session->has('cart')) {
+            $this->cart = unserialize($session->get('cart'));
+
+            // Check whether cart in session is correct
+            if (! $this->cart instanceof Cart) {
+                $this->cart = null;
+            }
+        }
+        // Init empty cart if restore from session failed
+        if (null === $this->cart) {
+            $this->initEmpty();
+        }
 
         return $this;
     }
