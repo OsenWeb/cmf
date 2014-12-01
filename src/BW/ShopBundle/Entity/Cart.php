@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Cart
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection Collection of OrderedProduct entities
      */
     private $items;
 
@@ -37,7 +37,13 @@ class Cart
      */
     public function setItems(ArrayCollection $items)
     {
-        // @TODO Maybe check each element for AbstractPurchasableProduct type
+        foreach ($items as $item) {
+            if (! $item instanceof OrderedProduct) {
+                throw new \InvalidArgumentException(
+                    'Each cart item in ArrayCollection should be instance of BW\ShopBundle\Entity\OrderedProduct'
+                );
+            }
+        }
         $this->items = $items;
 
         return $this;

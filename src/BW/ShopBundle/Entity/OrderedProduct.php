@@ -30,6 +30,14 @@ class OrderedProduct
      */
     private $product;
 
+    /**
+     * @var Order
+     */
+    private $order;
+
+    /**
+     * @param Product $product
+     */
     public function __construct(Product $product = null)
     {
         $this->product = $product;
@@ -132,6 +140,25 @@ class OrderedProduct
     public function setProduct(Product $product)
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param Order $order
+     * @return OrderedProduct
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
 
         return $this;
     }

@@ -12,4 +12,12 @@ BW\ShopBundle\Entity\Order:
             type: datetime
         updatedAt:
             type: datetime
+    oneToMany:
+        orderedProducts:
+            targetEntity: BW\ShopBundle\Entity\OrderedProduct
+            mappedBy: order
+    manyToOne:
+        status:
+            targetEntity: BW\ShopBundle\Entity\Status
+            inversedBy: orders
     lifecycleCallbacks: {  }

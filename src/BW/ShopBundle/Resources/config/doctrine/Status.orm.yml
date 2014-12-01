@@ -1,0 +1,18 @@
+BW\ShopBundle\Entity\Status:
+    type: entity
+    table: shop_status
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+    oneToMany:
+        orders:
+            targetEntity: BW\ShopBundle\Entity\Order
+            mappedBy: status
+    lifecycleCallbacks: {  }

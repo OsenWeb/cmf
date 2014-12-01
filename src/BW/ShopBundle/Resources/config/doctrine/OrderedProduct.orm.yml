@@ -17,4 +17,7 @@ BW\ShopBundle\Entity\OrderedProduct:
     manyToOne:
         product:
             targetEntity: BW\ShopBundle\Entity\Product
+        order:
+            targetEntity: BW\ShopBundle\Entity\Order
+            inversedBy: orderedProducts
     lifecycleCallbacks: {  }

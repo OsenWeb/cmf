@@ -32,6 +32,11 @@ class Order
     private $orderedProducts;
 
     /**
+     * @var Status
+     */
+    private $status;
+
+    /**
      * The constructor
      */
     public function __construct()
@@ -41,11 +46,17 @@ class Order
         $this->orderedProducts = new ArrayCollection();
     }
 
+    /**
+     * @return int
+     */
     public function calculateTotalQuantity()
     {
         die('calculateTotalQuantity');
     }
 
+    /**
+     * @return float
+     */
     public function calculateTotalPrice()
     {
         die('calculateTotalPrice');
@@ -97,6 +108,44 @@ class Order
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrderedProducts()
+    {
+        return $this->orderedProducts;
+    }
+
+    /**
+     * @param ArrayCollection $orderedProducts
+     * @return Order
+     */
+    public function setOrderedProducts(ArrayCollection $orderedProducts)
+    {
+        $this->orderedProducts = $orderedProducts;
+
+        return $this;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param Status $status
+     * @return Order
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
