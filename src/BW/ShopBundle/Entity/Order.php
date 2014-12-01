@@ -2,6 +2,7 @@
 
 namespace BW\ShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,25 +17,39 @@ class Order
     private $id;
 
     /**
-     * @var integer
+     * @var \DateTime
      */
-    private $count = 1;
-
-    /**
-     * @var string
-     */
-    private $price = 0.00;
+    private $createdAt;
 
     /**
      * @var \DateTime
      */
-    private $created;
+    private $updatedAt;
 
     /**
-     * @var \DateTime
+     * @var ArrayCollection
      */
-    private $updated;
+    private $orderedProducts;
 
+    /**
+     * The constructor
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+        $this->orderedProducts = new ArrayCollection();
+    }
+
+    public function calculateTotalQuantity()
+    {
+        die('calculateTotalQuantity');
+    }
+
+    public function calculateTotalPrice()
+    {
+        die('calculateTotalPrice');
+    }
 
     /* SETTERS / GETTERS */
 
@@ -49,66 +64,20 @@ class Order
     }
 
     /**
-     * Set count
-     *
-     * @param integer $count
-     * @return Order
-     */
-    public function setCount($count)
-    {
-        $this->count = $count;
-
-        return $this;
-    }
-
-    /**
-     * Get count
-     *
-     * @return integer
-     */
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    /**
-     * Set price
-     *
-     * @param string $price
-     * @return Order
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return string
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
      * @return \DateTime
      */
-    public function getCreated()
+    public function getCreatedAt()
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
     /**
-     * @param \DateTime $created
+     * @param \DateTime $createdAt
      * @return Order
      */
-    public function setCreated($created)
+    public function setCreatedAt($createdAt)
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -116,18 +85,18 @@ class Order
     /**
      * @return \DateTime
      */
-    public function getUpdated()
+    public function getUpdatedAt()
     {
-        return $this->updated;
+        return $this->updatedAt;
     }
 
     /**
-     * @param \DateTime $updated
+     * @param \DateTime $updatedAt
      * @return Order
      */
-    public function setUpdated($updated)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updated = $updated;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

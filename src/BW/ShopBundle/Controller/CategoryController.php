@@ -4,7 +4,6 @@ namespace BW\ShopBundle\Controller;
 
 use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Utility\FormUtility;
-use BW\RouterBundle\Entity\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

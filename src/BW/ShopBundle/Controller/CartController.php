@@ -2,10 +2,7 @@
 
 namespace BW\ShopBundle\Controller;
 
-use BW\ShopBundle\Entity\AbstractPurchasableProduct;
-use BW\ShopBundle\Entity\CartItem;
 use BW\ShopBundle\Entity\OrderedProduct;
-use BW\ShopBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 

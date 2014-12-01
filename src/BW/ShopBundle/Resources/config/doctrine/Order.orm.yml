@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\Order:
     type: entity
-    table: orders
+    table: shop_order
     id:
         id:
             type: integer
@@ -8,14 +8,8 @@ BW\ShopBundle\Entity\Order:
             generator:
                 strategy: AUTO
     fields:
-        count:
-            type: integer
-        price:
-            type: decimal
-            precision: 12
-            scale: 2
-        created:
+        createdAt:
             type: datetime
-        updated:
+        updatedAt:
             type: datetime
     lifecycleCallbacks: {  }

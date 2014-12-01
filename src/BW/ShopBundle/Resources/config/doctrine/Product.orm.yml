@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\Product:
     type: entity
-    table: shop_products
+    table: shop_product
     id:
         id:
             type: integer

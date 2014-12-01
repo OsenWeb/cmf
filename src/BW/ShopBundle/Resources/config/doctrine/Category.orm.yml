@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\Category:
     type: entity
-    table: shop_categories
+    table: shop_category
     id:
         id:
             type: integer

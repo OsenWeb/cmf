@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\OrderedProduct:
     type: entity
-    table: null
+    table: shop_ordered_product
     id:
         id:
             type: integer

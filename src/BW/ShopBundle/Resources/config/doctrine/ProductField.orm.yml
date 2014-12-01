@@ -1,6 +1,6 @@
 BW\ShopBundle\Entity\ProductField:
     type: entity
-    table: shop_product_custom_fields
+    table: shop_product_custom_field
     id:
         id:
             type: integer
