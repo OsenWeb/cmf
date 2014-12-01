@@ -2,9 +2,11 @@
 
 namespace BW\ShopBundle\Service;
 
-use BW\ShopBundle\Entity\AbstractPurchasableProduct;
 use BW\ShopBundle\Entity\Cart;
+use BW\ShopBundle\Entity\OrderedProduct;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
+use BW\ShopBundle\Form\OrderedProductAddToCartType;
+use BW\ShopBundle\Form\OrderedProductType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -62,35 +64,18 @@ class CartService
 
 
     /**
-     * @param AbstractPurchasableProduct $entity
+     * @param OrderedProduct $entity
      * @return Form
      */
-    public function createAddToCartForm(AbstractPurchasableProduct $entity = null)
+    public function createAddToCartForm(OrderedProduct $entity = null)
     {
-        // this assumes that the entity manager was passed in as an option
-        $transformer = new EntityToIdTransformer($this->em->getRepository('BWShopBundle:Product'));
-
-        /** @var FormBuilder $builder */
-        $builder = $this->formFactory->createBuilder('form', null, [
+        $form = $this->formFactory->create(new OrderedProductAddToCartType(), $entity, [
             'csrf_protection' => false,
-        ])->setAction($this->router->generate('cart_add_item'));
+            'action' => $this->router->generate('cart_add_item'),
+            'em' => $this->em,
+        ]);
 
-        $builder
-            // add a normal text field, but add your transformer to it
-            ->add(
-                $builder->create('item', 'hidden', [
-                    'data_class' => null,
-                    'data' => $entity,
-                ])->addModelTransformer($transformer)
-            )
-            ->add('add', 'submit', [
-                'label' => 'Добавить в корзину',
-                'attr' => [
-                    'class' => 'add-to-cart-button',
-                ],
-            ]);
-
-        return $builder->getForm();
+        return $form;
     }
 
     /**

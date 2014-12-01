@@ -13,7 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Product
  * @package BW\ShopBundle\Entity
  */
-class Product extends AbstractPurchasableProduct implements SluggableInterface, RouteInterface
+class Product
+    extends AbstractPurchasableProduct
+    implements SluggableInterface, RouteInterface, EntityToIdTransformerInterface
 {
     /**
      * @var integer

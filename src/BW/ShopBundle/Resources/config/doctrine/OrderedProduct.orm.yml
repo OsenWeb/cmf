@@ -1,0 +1,20 @@
+BW\ShopBundle\Entity\OrderedProduct:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        quantity:
+            type: integer
+        price:
+            type: decimal
+            precision: 12
+            scale: 2
+    manyToOne:
+        product:
+            targetEntity: BW\ShopBundle\Entity\Product
+    lifecycleCallbacks: {  }

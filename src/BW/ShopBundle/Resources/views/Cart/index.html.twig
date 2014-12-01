@@ -31,13 +31,13 @@
                             <tr>
                                 <td>{{ loop.index }}</td>
                                 <td>
-                                    {{ item.heading }}<br/>
-                                    {{ item.priceInCart }}&nbsp;грн.
+                                    {{ item.product.heading }}<br/>
+                                    {{ item.price }}&nbsp;грн.
                                 </td>
                                 <td>
-                                    <input type="number" min="1" max="99" value="{{ item.quantityInCart }}" />
+                                    <input type="number" min="1" max="99" value="{{ item.quantity }}" />
                                 </td>
-                                <td>{{ item.calculateTotalPriceInCart }}&nbsp;грн.</td>
+                                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
                                 <td>{{ bw_remove_from_cart_form_render(item) }}</td>
                             </tr>
                         {% endfor %}

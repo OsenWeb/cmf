@@ -46,19 +46,19 @@ class Cart
     /**
      * Add item to cart
      *
-     * @param AbstractPurchasableProduct $item
+     * @param OrderedProduct $item
      * @return $this
      */
-    public function addItem(AbstractPurchasableProduct $item)
+    public function addItem(OrderedProduct $item)
     {
         if (! $this->getItems()->exists(function ($key, $value) use ($item) {
-            /** @var AbstractPurchasableProduct $value */
-            $result = $value->getId() === $item->getId();
-            if (true === $result) {
-                $value->setQuantityInCart($value->getQuantityInCart() + $item->getQuantityInCart()); // merge quantities
+            /** @var OrderedProduct $value */
+            $isEqual = $value->getProduct()->getId() === $item->getProduct()->getId();
+            if (true === $isEqual) {
+                $value->setQuantity($value->getQuantity() + $item->getQuantity()); // merge quantities
             }
 
-            return $result;
+            return $isEqual;
         })) {
             $this->items->add($item);
         }

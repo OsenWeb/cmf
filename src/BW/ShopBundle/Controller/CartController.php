@@ -4,6 +4,7 @@ namespace BW\ShopBundle\Controller;
 
 use BW\ShopBundle\Entity\AbstractPurchasableProduct;
 use BW\ShopBundle\Entity\CartItem;
+use BW\ShopBundle\Entity\OrderedProduct;
 use BW\ShopBundle\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,11 @@ class CartController extends Controller
         ]);
     }
 
+    public function checkoutAction()
+    {
+
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -45,18 +51,12 @@ class CartController extends Controller
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getCart();
 
-        $form = $cartService->createAddToCartForm();
+        $orderedProduct = new OrderedProduct();
+        $form = $cartService->createAddToCartForm($orderedProduct);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $data = $form->getData();
-            /** @var Product $item */
-            $item = $data['item'];
-            // Set entity price for display in cart
-            $price = 0.00 < $item->getDiscountPrice() ? $item->getDiscountPrice() : $item->getPrice();
-            $item->setPriceInCart($price);
-            // Set entity quantity in cart
-            $item->setQuantityInCart(1);
-            $cart->addItem($item);
+            $orderedProduct->handleProduct();
+            $cart->addItem($orderedProduct);
             $cartService->save();
         }
 

@@ -5,6 +5,8 @@ namespace BW\ShopBundle\Twig;
 use BW\ShopBundle\Entity\AbstractPurchasableProduct;
 use BW\ShopBundle\Entity\CartItem;
 use BW\ShopBundle\Entity\CartItemInterface;
+use BW\ShopBundle\Entity\OrderedProduct;
+use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Service\CartService;
 use Twig_Environment;
 
@@ -70,12 +72,13 @@ class CartExtension extends \Twig_Extension
     }
 
     /**
-     * @param AbstractPurchasableProduct $entity
+     * @param Product $entity
      * @return string
      */
-    public function addToCartFormRenderFunction(AbstractPurchasableProduct $entity)
+    public function addToCartFormRenderFunction(Product $entity)
     {
-        $form = $this->cartService->createAddToCartForm($entity);
+        $orderedProduct = new OrderedProduct($entity);
+        $form = $this->cartService->createAddToCartForm($orderedProduct);
 
         return $this->twig->render('BWShopBundle:Cart:add-to-cart-form.html.twig', [
             'form' => $form->createView(),
@@ -83,10 +86,10 @@ class CartExtension extends \Twig_Extension
     }
 
     /**
-     * @param AbstractPurchasableProduct $entity
+     * @param OrderedProduct $entity
      * @return string
      */
-    public function removeFromCartFormRenderFunction(AbstractPurchasableProduct $entity)
+    public function removeFromCartFormRenderFunction(OrderedProduct $entity)
     {
         $key = $this->cartService->getCart()->getItems()->indexOf($entity);
         $form = $this->cartService->createRemoveFromCartForm($key);

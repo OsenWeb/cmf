@@ -10,5 +10,8 @@ use BW\ShopBundle\Entity\Entity;
  */
 interface EntityToIdTransformerInterface
 {
+    /**
+     * @return int|null
+     */
     public function getId();
 }
