@@ -6,12 +6,12 @@ cart_clear:
     path:     /clear
     defaults: { _controller: "BWShopBundle:Cart:clear" }
 
-cart_add_item:
-    path:     /add-item
-    defaults: { _controller: "BWShopBundle:Cart:addItem" }
+cart_add:
+    path:     /add
+    defaults: { _controller: "BWShopBundle:Cart:add" }
     methods:  [POST]
 
-cart_remove_item:
-    path:     /remove-item
-    defaults: { _controller: "BWShopBundle:Cart:removeItem" }
+cart_remove:
+    path:     /remove
+    defaults: { _controller: "BWShopBundle:Cart:remove" }
     methods:  [POST]

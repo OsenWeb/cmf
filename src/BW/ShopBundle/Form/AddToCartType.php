@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class OrderedProductAddToCartType extends AbstractType
+class AddToCartType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -61,6 +61,6 @@ class OrderedProductAddToCartType extends AbstractType
      */
     public function getName()
     {
-        return 'bw_ordered_product_add_to_cart';
+        return 'bw_add_to_cart';
     }
 }

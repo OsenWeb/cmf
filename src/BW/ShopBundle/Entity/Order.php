@@ -27,14 +27,14 @@ class Order
     private $updatedAt;
 
     /**
-     * @var ArrayCollection
-     */
-    private $orderedProducts;
-
-    /**
      * @var Status
      */
     private $status;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $orderedProducts;
 
     /**
      * The constructor
@@ -113,25 +113,6 @@ class Order
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getOrderedProducts()
-    {
-        return $this->orderedProducts;
-    }
-
-    /**
-     * @param ArrayCollection $orderedProducts
-     * @return Order
-     */
-    public function setOrderedProducts(ArrayCollection $orderedProducts)
-    {
-        $this->orderedProducts = $orderedProducts;
-
-        return $this;
-    }
-
-    /**
      * @return Status
      */
     public function getStatus()
@@ -146,6 +127,55 @@ class Order
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrderedProducts()
+    {
+        return $this->orderedProducts;
+    }
+
+    /**
+     * @param ArrayCollection $orderedProducts
+     * @return $this
+     */
+    public function setOrderedProducts(ArrayCollection $orderedProducts)
+    {
+        foreach ($orderedProducts as $orderedProduct) {
+            if (! $orderedProduct instanceof OrderedProduct) {
+                throw new \UnexpectedValueException(
+                    'Each item in orderedProducts array collection should be instance of BW\ShopBundle\Entity\OrderedProduct'
+                );
+            }
+        }
+        $this->orderedProducts = $orderedProduct;
+
+        return $this;
+    }
+
+    /**
+     * Add item to cart
+     *
+     * @param OrderedProduct $orderedProduct
+     * @return $this
+     */
+    public function addOrderedProduct(OrderedProduct $orderedProduct)
+    {
+        if (! $this->getOrderedProducts()->exists(function ($key, $value) use ($orderedProduct) {
+            /** @var OrderedProduct $value */
+            $isEqual = $value->getProduct()->getId() === $orderedProduct->getProduct()->getId();
+            if (true === $isEqual) {
+                $value->setQuantity($value->getQuantity() + $orderedProduct->getQuantity()); // merge quantities
+            }
+
+            return $isEqual;
+        })) {
+            $this->orderedProducts->add($orderedProduct);
+        }
 
         return $this;
     }

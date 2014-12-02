@@ -43,7 +43,7 @@ class CartController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addItemAction(Request $request)
+    public function addAction(Request $request)
     {
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getCart();
@@ -52,8 +52,9 @@ class CartController extends Controller
         $form = $cartService->createAddToCartForm($orderedProduct);
         $form->handleRequest($request);
         if ($form->isValid()) {
+            // @TODO Move to event listener
             $orderedProduct->handleProduct();
-            $cart->addItem($orderedProduct);
+            $cart->getOrder()->addOrderedProduct($orderedProduct);
             $cartService->save();
         }
 
@@ -64,7 +65,7 @@ class CartController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeItemAction(Request $request)
+    public function removeAction(Request $request)
     {
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getCart();
@@ -73,7 +74,7 @@ class CartController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
-            $cart->getItems()->remove($data['item_key']);
+            $cart->getOrder()->getOrderedProducts()->remove($data['item_key']);
             $cartService->save();
         }
 

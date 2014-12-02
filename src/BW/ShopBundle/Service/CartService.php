@@ -3,10 +3,10 @@
 namespace BW\ShopBundle\Service;
 
 use BW\ShopBundle\Entity\Cart;
+use BW\ShopBundle\Entity\Order;
 use BW\ShopBundle\Entity\OrderedProduct;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
-use BW\ShopBundle\Form\OrderedProductAddToCartType;
-use BW\ShopBundle\Form\OrderedProductType;
+use BW\ShopBundle\Form\AddToCartType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -45,7 +45,6 @@ class CartService
      */
     private $requestStack;
 
-
     /**
      * @param EntityManager $em
      * @param FormFactory $formFactory
@@ -62,6 +61,17 @@ class CartService
         $this->restore();
     }
 
+    /**/
+    public function createCheckoutForm(Order $entity = null)
+    {
+        $form = $this->formFactory->create(new CheckoutType(), $entity, [
+            'csrf_protection' => false,
+            'action' => $this->router->generate('cart_add'),
+            'em' => $this->em,
+        ]);
+
+        return $form;
+    }
 
     /**
      * @param OrderedProduct $entity
@@ -69,9 +79,9 @@ class CartService
      */
     public function createAddToCartForm(OrderedProduct $entity = null)
     {
-        $form = $this->formFactory->create(new OrderedProductAddToCartType(), $entity, [
+        $form = $this->formFactory->create(new AddToCartType(), $entity, [
             'csrf_protection' => false,
-            'action' => $this->router->generate('cart_add_item'),
+            'action' => $this->router->generate('cart_add'),
             'em' => $this->em,
         ]);
 
@@ -91,7 +101,7 @@ class CartService
         /** @var FormBuilder $builder */
         $builder = $this->formFactory->createBuilder('form', null, [
             'csrf_protection' => false,
-        ])->setAction($this->router->generate('cart_remove_item'));
+        ])->setAction($this->router->generate('cart_remove'));
 
         $builder
             // Key of value (AbstractPurchasableProduct entity) in ArrayCollection

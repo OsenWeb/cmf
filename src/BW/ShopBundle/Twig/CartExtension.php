@@ -64,6 +64,11 @@ class CartExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * Render cart template
+     *
+     * @return string
+     */
     public function cartRenderFunction()
     {
         return $this->twig->render('BWShopBundle:Cart:cart.html.twig', [
@@ -72,6 +77,8 @@ class CartExtension extends \Twig_Extension
     }
 
     /**
+     * Render add ordered products to cart form
+     *
      * @param Product $entity
      * @return string
      */
@@ -86,12 +93,14 @@ class CartExtension extends \Twig_Extension
     }
 
     /**
+     * Render remove ordered products from cart form
+     *
      * @param OrderedProduct $entity
      * @return string
      */
     public function removeFromCartFormRenderFunction(OrderedProduct $entity)
     {
-        $key = $this->cartService->getCart()->getItems()->indexOf($entity);
+        $key = $this->cartService->getCart()->getOrder()->getOrderedProducts()->indexOf($entity);
         $form = $this->cartService->createRemoveFromCartForm($key);
 
         return $this->twig->render('BWShopBundle:Cart:remove-from-cart-form.html.twig', [

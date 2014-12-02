@@ -1,17 +1,17 @@
 <h3>Виджет корзины</h3>
-{% if cart and cart.items.count %}
+{% if cart and cart.order.orderedProducts.count %}
     <table>
         <tr>
             <th>Название</th>
             <th>Цена</th>
         </tr>
-        {% for item in cart.items %}
+        {% for orderedProduct in cart.order.orderedProducts %}
             <tr>
                 <td>
-                    {{ item.product.heading }}<br/>
-                    {{ item.quantity }} по {{ item.price }}&nbsp;грн.
+                    {{ orderedProduct.product.heading }}<br/>
+                    {{ orderedProduct.quantity }} по {{ orderedProduct.price }}&nbsp;грн.
                 </td>
-                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
+                <td>{{ orderedProduct.calculateTotalPrice }}&nbsp;грн.</td>
             </tr>
         {% endfor %}
     </table>

@@ -18,7 +18,7 @@
         <div class="product-category products-list items-list page-content row">
             <div class="col">
                 <h1><i class="icon-shopping-cart"></i> Корзина</h1>
-                {% if cart and cart.items.count %}
+                {% if cart and cart.order.orderedProducts.count %}
                     <table>
                         <tr>
                             <th>№</th>
@@ -27,18 +27,18 @@
                             <th>Цена</th>
                             <th></th>
                         </tr>
-                        {% for item in cart.items %}
+                        {% for orderedProduct in cart.order.orderedProducts %}
                             <tr>
                                 <td>{{ loop.index }}</td>
                                 <td>
-                                    {{ item.product.heading }}<br/>
-                                    {{ item.price }}&nbsp;грн.
+                                    {{ orderedProduct.product.heading }}<br/>
+                                    {{ orderedProduct.price }}&nbsp;грн.
                                 </td>
                                 <td>
-                                    <input type="number" min="1" max="99" value="{{ item.quantity }}" />
+                                    <input type="number" min="1" max="99" value="{{ orderedProduct.quantity }}" />
                                 </td>
-                                <td>{{ item.calculateTotalPrice }}&nbsp;грн.</td>
-                                <td>{{ bw_remove_from_cart_form_render(item) }}</td>
+                                <td>{{ orderedProduct.calculateTotalPrice }}&nbsp;грн.</td>
+                                <td>{{ bw_remove_from_cart_form_render(orderedProduct) }}</td>
                             </tr>
                         {% endfor %}
                     </table>
