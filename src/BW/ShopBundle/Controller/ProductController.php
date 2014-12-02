@@ -4,6 +4,7 @@ namespace BW\ShopBundle\Controller;
 
 use BW\CustomBundle\Entity\Property;
 use BW\MainBundle\Utility\FormUtility;
+use BW\ShopBundle\Entity\OrderedProduct;
 use BW\ShopBundle\Entity\ProductField;
 use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Entity\ProductImage;
@@ -291,6 +292,7 @@ class ProductController extends Controller
     public function showAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $cartService = $this->get('bw_shop.service.cart');
 
         /** @var QueryBuilder $qb */
         $qb = $em->getRepository('BWShopBundle:Product')->createQueryBuilder('p');
@@ -340,12 +342,12 @@ class ProductController extends Controller
             ];
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $form = $cartService->createAddToCartForm(new OrderedProduct($entity));
 
         return $this->render('BWShopBundle:Product:show.html.twig', array(
-            'entity'      => $entity,
-            'images'      => $images,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'images' => $images,
+            'form' => $form->createView(),
         ));
     }
 

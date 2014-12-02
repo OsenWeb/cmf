@@ -17,16 +17,37 @@ class CartController extends Controller
      */
     public function indexAction()
     {
-        $cart = $this->get('bw_shop.service.cart')->getCart();
+        $cartService = $this->get('bw_shop.service.cart');
+        $cart = $cartService->getCart();
+        $form = $cartService->createCheckoutForm($cart->getOrder());
 
         return $this->render('BWShopBundle:Cart:index.html.twig', [
             'cart' => $cart,
+            'form' => $form->createView(),
         ]);
     }
 
-    public function checkoutAction()
+    public function checkoutAction(Request $request)
     {
+        $cartService = $this->get('bw_shop.service.cart');
+        $cart = $cartService->getCart();
+        $form = $cartService->createCheckoutForm($cart->getOrder());
 
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            if ($form->get('recalculate')->isClicked()) {
+                $cartService->save();
+                return $this->redirect($this->generateUrl('cart'));
+            }
+            die('valid');
+        } else {
+//            var_dump($form->getErrors());
+        }
+
+        return $this->render('BWShopBundle:Cart:index.html.twig', [
+            'cart' => $cart,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -65,16 +86,13 @@ class CartController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeAction(Request $request)
+    public function removeAction(Request $request, $index)
     {
         $cartService = $this->get('bw_shop.service.cart');
         $cart = $cartService->getCart();
 
-        $form = $cartService->createRemoveFromCartForm();
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $cart->getOrder()->getOrderedProducts()->remove($data['item_key']);
+        $removedElement = $cart->getOrder()->getOrderedProducts()->remove($index);
+        if (null !== $removedElement) {
             $cartService->save();
         }
 

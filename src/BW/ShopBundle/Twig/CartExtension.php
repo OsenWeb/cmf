@@ -3,11 +3,14 @@
 namespace BW\ShopBundle\Twig;
 
 use BW\ShopBundle\Entity\AbstractPurchasableProduct;
+use BW\ShopBundle\Entity\Cart;
 use BW\ShopBundle\Entity\CartItem;
 use BW\ShopBundle\Entity\CartItemInterface;
+use BW\ShopBundle\Entity\Order;
 use BW\ShopBundle\Entity\OrderedProduct;
 use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Service\CartService;
+use Symfony\Component\Form\Form;
 use Twig_Environment;
 
 class CartExtension extends \Twig_Extension
@@ -52,13 +55,7 @@ class CartExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('bw_cart_render', array($this, 'cartRenderFunction'), [
-                'is_safe' => ['html'],
-            ]),
-            new \Twig_SimpleFunction('bw_add_to_cart_form_render', array($this, 'addToCartFormRenderFunction'), [
-                'is_safe' => ['html'],
-            ]),
-            new \Twig_SimpleFunction('bw_remove_from_cart_form_render', array($this, 'removeFromCartFormRenderFunction'), [
+            new \Twig_SimpleFunction('bw_cart_widget', array($this, 'cartWidgetFunction'), [
                 'is_safe' => ['html'],
             ]),
         );
@@ -69,42 +66,10 @@ class CartExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function cartRenderFunction()
+    public function cartWidgetFunction()
     {
         return $this->twig->render('BWShopBundle:Cart:cart.html.twig', [
             'cart' => $this->cartService->getCart(),
-        ]);
-    }
-
-    /**
-     * Render add ordered products to cart form
-     *
-     * @param Product $entity
-     * @return string
-     */
-    public function addToCartFormRenderFunction(Product $entity)
-    {
-        $orderedProduct = new OrderedProduct($entity);
-        $form = $this->cartService->createAddToCartForm($orderedProduct);
-
-        return $this->twig->render('BWShopBundle:Cart:add-to-cart-form.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Render remove ordered products from cart form
-     *
-     * @param OrderedProduct $entity
-     * @return string
-     */
-    public function removeFromCartFormRenderFunction(OrderedProduct $entity)
-    {
-        $key = $this->cartService->getCart()->getOrder()->getOrderedProducts()->indexOf($entity);
-        $form = $this->cartService->createRemoveFromCartForm($key);
-
-        return $this->twig->render('BWShopBundle:Cart:remove-from-cart-form.html.twig', [
-            'form' => $form->createView(),
         ]);
     }
 }

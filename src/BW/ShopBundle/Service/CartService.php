@@ -5,6 +5,7 @@ namespace BW\ShopBundle\Service;
 use BW\ShopBundle\Entity\Cart;
 use BW\ShopBundle\Entity\Order;
 use BW\ShopBundle\Entity\OrderedProduct;
+use BW\ShopBundle\Form\CheckoutType;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
 use BW\ShopBundle\Form\AddToCartType;
 use Doctrine\ORM\EntityManager;
@@ -53,6 +54,7 @@ class CartService
      */
     public function __construct(EntityManager $em, FormFactory $formFactory, Router $router, RequestStack $requestStack)
     {
+        /** @TODO Maybe use CartController as a service and remove CartService? */
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -65,9 +67,8 @@ class CartService
     public function createCheckoutForm(Order $entity = null)
     {
         $form = $this->formFactory->create(new CheckoutType(), $entity, [
-            'csrf_protection' => false,
-            'action' => $this->router->generate('cart_add'),
-            'em' => $this->em,
+//            'csrf_protection' => false,
+            'action' => $this->router->generate('cart_checkout'),
         ]);
 
         return $form;
@@ -80,7 +81,7 @@ class CartService
     public function createAddToCartForm(OrderedProduct $entity = null)
     {
         $form = $this->formFactory->create(new AddToCartType(), $entity, [
-            'csrf_protection' => false,
+//            'csrf_protection' => false,
             'action' => $this->router->generate('cart_add'),
             'em' => $this->em,
         ]);
@@ -100,7 +101,7 @@ class CartService
 
         /** @var FormBuilder $builder */
         $builder = $this->formFactory->createBuilder('form', null, [
-            'csrf_protection' => false,
+//            'csrf_protection' => false,
         ])->setAction($this->router->generate('cart_remove'));
 
         $builder

@@ -12,6 +12,10 @@ cart_add:
     methods:  [POST]
 
 cart_remove:
-    path:     /remove
+    path:     /remove/{index}
     defaults: { _controller: "BWShopBundle:Cart:remove" }
+
+cart_checkout:
+    path:     /checkout
+    defaults: { _controller: "BWShopBundle:Cart:checkout" }
     methods:  [POST]

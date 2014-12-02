@@ -1,0 +1,48 @@
+<div class="checkout-cart">
+    {% if form.orderedProducts.count %}
+        {{ form_start(form) }}
+            <div style="color: #ff0000;">
+                {{ form_errors(form) }}
+            </div>
+            <table>
+                <tr>
+                    <th>№</th>
+                    <th>Название</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th></th>
+                </tr>
+                {% for index, orderedProduct in form.orderedProducts %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            {{ orderedProduct.vars.value.product.heading }}<br/>
+                            {{ orderedProduct.vars.value.price }}&nbsp;грн.
+                        </td>
+                        <td>
+                            {{ form_row(orderedProduct.quantity) }}
+                        </td>
+                        <td>{{ orderedProduct.vars.value.calculateTotalPrice }}&nbsp;грн.</td>
+                        <td>
+                            <a class="button" href="{{ path('cart_remove', {'index': index}) }}">
+                                Удалить из корзины
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div style="display: inline-block">
+                <a class="button" href="{{ path('cart_clear') }}">Очистить корзину</a>
+            </div>
+            <div style="display: inline-block">
+                {{ form_row(form.recalculate) }}
+            </div>
+            <div style="display: inline-block">
+                {{ form_row(form.checkout) }}
+            </div>
+        {{ form_end(form) }}
+    {% else %}
+        <h2>Ваша корзина пуста</h2>
+        <div>Вернитесь в <a href="{{ path('product_list') }}">магазин</a> чтобы добавить товар</div>
+    {% endif %}
+</div>

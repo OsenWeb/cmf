@@ -16,6 +16,7 @@ BW\ShopBundle\Entity\Order:
         orderedProducts:
             targetEntity: BW\ShopBundle\Entity\OrderedProduct
             mappedBy: order
+#            cascade: [persist]
     manyToOne:
         status:
             targetEntity: BW\ShopBundle\Entity\Status

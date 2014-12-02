@@ -2,8 +2,6 @@
 
 namespace BW\ShopBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Class Cart
  * @package BW\ShopBundle\Entity
