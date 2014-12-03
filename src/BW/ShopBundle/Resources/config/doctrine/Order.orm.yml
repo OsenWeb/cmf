@@ -1,6 +1,8 @@
 BW\ShopBundle\Entity\Order:
     type: entity
     table: shop_order
+    entityListeners:
+        BW\ShopBundle\EventListener\OrderListener:
     id:
         id:
             type: integer

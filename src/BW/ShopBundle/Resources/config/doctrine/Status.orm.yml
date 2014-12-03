@@ -8,6 +8,10 @@ BW\ShopBundle\Entity\Status:
             generator:
                 strategy: AUTO
     fields:
+        alias:
+            type: string
+            length: 255
+            unique: true
         name:
             type: string
             length: 255

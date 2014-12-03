@@ -18,6 +18,11 @@ class Status
     /**
      * @var string
      */
+    private $alias;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -41,6 +46,25 @@ class Status
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * @param string $alias
+     * @return Status
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
     }
 
     /**
