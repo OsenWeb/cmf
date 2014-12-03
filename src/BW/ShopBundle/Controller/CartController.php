@@ -39,9 +39,26 @@ class CartController extends Controller
                 $cartService->save();
                 return $this->redirect($this->generateUrl('cart'));
             }
-            die('valid');
-        } else {
-//            var_dump($form->getErrors());
+
+            $em = $this->getDoctrine()->getManager();
+
+            $order = $cart->getOrder();
+            /**
+             * Fetch each Product entity from DB, related to OrderedProduct,
+             * and reassign it to OrderedProduct (for entity manager correct work!)
+             */
+            /** @var OrderedProduct $orderedProduct */
+            foreach ($order->getOrderedProducts() as $orderedProduct) {
+                $productId = $orderedProduct->getProduct()->getId();
+                $product = $em->getRepository('BWShopBundle:Product')->find($productId);
+                $orderedProduct->setProduct($product);
+            }
+            $em->persist($order);
+            $em->flush();
+
+            $cartService->clear();
+
+            return $this->redirect($this->generateUrl('cart'));
         }
 
         return $this->render('BWShopBundle:Cart:index.html.twig', [

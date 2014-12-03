@@ -151,6 +151,8 @@ class Order
                     'Each item in orderedProducts array collection should be instance of BW\ShopBundle\Entity\OrderedProduct'
                 );
             }
+
+            $orderedProduct->setOrder($this); // Relating OrderedProduct ot the current Order
         }
         $this->orderedProducts = $orderedProduct;
 
@@ -165,6 +167,8 @@ class Order
      */
     public function addOrderedProduct(OrderedProduct $orderedProduct)
     {
+        $orderedProduct->setOrder($this); // Relating OrderedProduct ot the current Order
+
         if (! $this->getOrderedProducts()->exists(function ($key, $value) use ($orderedProduct) {
             /** @var OrderedProduct $value */
             $isEqual = $value->getProduct()->getId() === $orderedProduct->getProduct()->getId();
