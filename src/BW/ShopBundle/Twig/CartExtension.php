@@ -55,10 +55,22 @@ class CartExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            new \Twig_SimpleFunction('bw_cart_service', array($this, 'cartServiceFunction'), [
+                'is_safe' => ['html'],
+            ]),
             new \Twig_SimpleFunction('bw_cart_widget', array($this, 'cartWidgetFunction'), [
                 'is_safe' => ['html'],
             ]),
         );
+    }
+
+    /**
+     * Get cart service
+     * @return CartService
+     */
+    public function cartServiceFunction()
+    {
+        return $this->cartService;
     }
 
     /**

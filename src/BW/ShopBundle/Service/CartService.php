@@ -5,6 +5,7 @@ namespace BW\ShopBundle\Service;
 use BW\ShopBundle\Entity\Cart;
 use BW\ShopBundle\Entity\Order;
 use BW\ShopBundle\Entity\OrderedProduct;
+use BW\ShopBundle\Entity\Product;
 use BW\ShopBundle\Form\CheckoutType;
 use BW\ShopBundle\Form\DataTransformer\EntityToIdTransformer;
 use BW\ShopBundle\Form\AddToCartType;
@@ -63,7 +64,19 @@ class CartService
         $this->restore();
     }
 
-    /**/
+    /**
+     * @param Product $entity
+     * @return OrderedProduct
+     */
+    public static function createOrderedProductFor(Product $entity)
+    {
+        return new OrderedProduct($entity);
+    }
+
+    /**
+     * @param Order $entity
+     * @return Form|\Symfony\Component\Form\FormInterface
+     */
     public function createCheckoutForm(Order $entity = null)
     {
         $form = $this->formFactory->create(new CheckoutType(), $entity, [

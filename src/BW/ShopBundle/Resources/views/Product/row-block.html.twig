@@ -62,5 +62,10 @@
 
     {% include 'BWShopBundle:Product:price-block.html.twig' %}
 
-    {{ bw_add_to_cart_form_render(entity) }}
+    {% include 'BWShopBundle:Cart:form-add-to-cart.html.twig'
+    with {'form': bw_cart_service().createAddToCartForm(
+    bw_cart_service().createOrderedProductFor(entity)
+    ).createView()
+    }
+    %}
 </div>
