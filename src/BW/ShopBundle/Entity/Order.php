@@ -27,14 +27,24 @@ class Order
     private $updatedAt;
 
     /**
+     * @var ArrayCollection
+     */
+    private $orderedProducts;
+
+    /**
      * @var Status
      */
     private $status;
 
     /**
-     * @var ArrayCollection
+     * @var Delivery
      */
-    private $orderedProducts;
+    private $delivery;
+
+    /**
+     * @var Payment
+     */
+    private $payment;
 
     /**
      * The constructor
@@ -113,25 +123,6 @@ class Order
     }
 
     /**
-     * @return Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param Status $status
-     * @return Order
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getOrderedProducts()
@@ -154,7 +145,7 @@ class Order
 
             $orderedProduct->setOrder($this); // Relating OrderedProduct ot the current Order
         }
-        $this->orderedProducts = $orderedProduct;
+        $this->orderedProducts = $orderedProducts;
 
         return $this;
     }
@@ -170,6 +161,7 @@ class Order
         $orderedProduct->setOrder($this); // Relating OrderedProduct ot the current Order
 
         if (! $this->getOrderedProducts()->exists(function ($key, $value) use ($orderedProduct) {
+            unset($key);
             /** @var OrderedProduct $value */
             $isEqual = $value->getProduct()->getId() === $orderedProduct->getProduct()->getId();
             if (true === $isEqual) {
@@ -182,5 +174,56 @@ class Order
         }
 
         return $this;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param Status $status
+     * @return Order
+     */
+    public function setStatus(Status $status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Delivery
+     */
+    public function getDelivery()
+    {
+        return $this->delivery;
+    }
+
+    /**
+     * @param Delivery $delivery
+     */
+    public function setDelivery(Delivery $delivery)
+    {
+        $this->delivery = $delivery;
+    }
+
+    /**
+     * @return Payment
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
+    /**
+     * @param Payment $payment
+     */
+    public function setPayment(Payment $payment)
+    {
+        $this->payment = $payment;
     }
 }

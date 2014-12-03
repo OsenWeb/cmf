@@ -23,4 +23,10 @@ BW\ShopBundle\Entity\Order:
         status:
             targetEntity: BW\ShopBundle\Entity\Status
             inversedBy: orders
+        delivery:
+            targetEntity: BW\ShopBundle\Entity\Delivery
+            inversedBy: orders
+        payment:
+            targetEntity: BW\ShopBundle\Entity\Payment
+            inversedBy: orders
     lifecycleCallbacks: {  }

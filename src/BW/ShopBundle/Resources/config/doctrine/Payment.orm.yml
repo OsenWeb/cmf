@@ -1,0 +1,20 @@
+BW\ShopBundle\Entity\Payment:
+    type: entity
+    table: shop_payment
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+        description:
+            type: text
+    oneToMany:
+        orders:
+            targetEntity: BW\ShopBundle\Entity\Order
+            mappedBy: payment
+    lifecycleCallbacks: {  }

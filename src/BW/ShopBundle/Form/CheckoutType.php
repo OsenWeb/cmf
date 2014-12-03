@@ -18,6 +18,16 @@ class CheckoutType extends AbstractType
             ->add('orderedProducts', 'collection', [
                 'type' => new OrderedProductType(),
             ])
+            ->add('delivery', 'entity', [
+                'class' => 'BW\ShopBundle\Entity\Delivery',
+                'property' => 'name',
+                'label' => 'Доставка ',
+            ])
+            ->add('payment', 'entity', [
+                'class' => 'BW\ShopBundle\Entity\Payment',
+                'property' => 'name',
+                'label' => 'Оплата ',
+            ])
             ->add('recalculate', 'submit', [
                 'label' => 'Пересчитать',
             ])

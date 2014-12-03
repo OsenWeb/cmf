@@ -36,8 +36,3 @@ services:
         arguments: ['@bw_shop.service.cart']
         tags:
             - { name: twig.extension }
-
-    bw_shop.event_listener.order:
-        public: false
-        class: \BW\ShopBundle\EventListener\OrderListener
-        arguments: []
