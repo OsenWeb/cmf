@@ -43,16 +43,6 @@ class CartController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $order = $cart->getOrder();
-            /**
-             * Fetch each Product entity from DB, related to OrderedProduct,
-             * and reassign it to OrderedProduct (for entity manager correct work!)
-             */
-            /** @var OrderedProduct $orderedProduct */
-            foreach ($order->getOrderedProducts() as $orderedProduct) {
-                $productId = $orderedProduct->getProduct()->getId();
-                $product = $em->getRepository('BWShopBundle:Product')->find($productId);
-                $orderedProduct->setProduct($product);
-            }
             $em->persist($order);
             $em->flush();
 

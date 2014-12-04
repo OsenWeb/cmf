@@ -15,6 +15,6 @@ BW\ShopBundle\Entity\Delivery:
             type: text
     oneToMany:
         orders:
-            targetEntity: BW\ShopBundle\Entity\Delivery
+            targetEntity: BW\ShopBundle\Entity\Order
             mappedBy: delivery
     lifecycleCallbacks: {  }

@@ -189,7 +189,30 @@ class CartService
             $this->cart = unserialize($session->get('cart'));
 
             // Check whether cart in session is correct
-            if (! $this->cart instanceof Cart) {
+            if ($this->cart instanceof Cart) {
+                $order = $this->cart->getOrder();
+                if ($delivery = $order->getDelivery()) {
+                    $delivery = $this->em->getRepository('BWShopBundle:Delivery')->find($delivery->getId());
+                    $order->setDelivery($delivery);
+                }
+
+                if ($payment = $order->getPayment()) {
+                    $payment = $this->em->getRepository('BWShopBundle:Payment')->find($payment->getId());
+                    $order->setPayment($payment);
+                }
+
+                /**
+                 * Fetch each Product entity from DB, related to OrderedProduct,
+                 * and reassign it to OrderedProduct (for entity manager correct work!)
+                 */
+                /** @var OrderedProduct $orderedProduct */
+                foreach ($order->getOrderedProducts() as $orderedProduct) {
+                    if ($product = $orderedProduct->getProduct()) {
+                        $product = $this->em->getRepository('BWShopBundle:Product')->find($product->getId());
+                        $orderedProduct->setProduct($product);
+                    }
+                }
+            } else {
                 $this->cart = null;
             }
         }

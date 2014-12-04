@@ -16,7 +16,9 @@
                     <tr>
                         <td>{{ loop.index }}</td>
                         <td>
-                            {{ orderedProduct.vars.value.product.heading }}<br/>
+                            <a href="{{ app.request.uriForPath(orderedProduct.vars.value.product.route.path) }}">
+                                {{ orderedProduct.vars.value.product.heading }}
+                            </a><br/>
                             {{ orderedProduct.vars.value.price }}&nbsp;грн.
                         </td>
                         <td>
